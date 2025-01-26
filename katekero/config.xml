@@ -1,0 +1,11 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<Configuration>
+  <Database>
+    <ConnectionString>Data Source=192.168.140.128;Initial Catalog=katekero_db;User ID=sa;Password=Sapassword1;TrustServerCertificate=true</ConnectionString>
+
+  </Database>
+  <Output>
+    <Folder>./output/</Folder>
+  </Output>
+</Configuration>
+

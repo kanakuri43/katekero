@@ -1,5 +1,6 @@
 ﻿<UserControl x:Class="katekero.Views.CustomerSearch"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"             
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
@@ -53,22 +54,39 @@
         <TextBox Grid.Row="4"
                  Controls:TextBoxHelper.Watermark="得意先検索"/>
 
-        <ListBox Grid.Row="5">
-            <ListBoxItem>トヨタ</ListBoxItem>
-            <ListBoxItem>日産</ListBoxItem>
-            <ListBoxItem>MAZDA</ListBoxItem>
-            <ListBoxItem>ダイハツ</ListBoxItem>
-            <ListBoxItem>スズキ</ListBoxItem>
-            <ListBoxItem>テスラ</ListBoxItem>
-            <ListBoxItem>GM</ListBoxItem>
+        <ListView Grid.Row="5"
+                  SelectedValuePath="Id"
+                  Background="WhiteSmoke"
+                  ItemsSource="{Binding Customers}" 
+                  SelectedValue="{Binding SelectedProductCategoryId}" >
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="NAME" 
+                                                Width="50" 
+                                                DisplayMemberBinding="{Binding Name}" 
+                                                />
 
-        </ListBox>
+                </GridView>
+            </ListView.View>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <prism:InvokeCommandAction 
+                            Command="{Binding AccountJournalsTableDoubleClick}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ListView>
 
         <StackPanel Grid.Row="6" Orientation="Horizontal">
-            <Button Content="＜＜"/>
-            <Button Content=" ＜ "/>
-            <Button Content=" ＞ "/>
-            <Button Content="＞＞"/>
+            <Button Content="＜＜" Margin="2"/>
+            <Button Content=" ＜ " Margin="2"/>
+            <TextBlock Text="( 1 / 3 )"/>
+            <Button Content=" ＞ " Margin="2"/>
+            <Button Content="＞＞" Margin="2"/>
         </StackPanel>
 
     </Grid>
