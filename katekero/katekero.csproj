@@ -3,6 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>katekero_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="config.xml" />
@@ -11,6 +12,7 @@
     <Content Include="config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="katekero_icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />

@@ -11,6 +11,7 @@ namespace katekero.Models
 {
     public class AppDbContext : DbContext
     {
+        public DbSet<Sale> Sales { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Customer> Customers { get; set; }
