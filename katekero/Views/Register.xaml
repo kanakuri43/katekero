@@ -258,17 +258,12 @@
 
                             </GridView>
                         </ListView.View>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <prism:InvokeCommandAction 
-                            Command="{Binding AccountJournalsTableDoubleClick}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
+
                     </ListView>
                     <ListView Grid.Column="2"
-                             SelectedValuePath="Id"
-                             ItemsSource="{Binding Products}" 
-                             SelectedValue="{Binding SelectedProductId}" >
+                              SelectedValuePath="Id"
+                              ItemsSource="{Binding Products}" 
+                              SelectedValue="{Binding SelectedProductId}">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -277,32 +272,18 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="NAME" Width="50" DisplayMemberBinding="{Binding Name}" />
-                                <GridViewColumn Header="Price" Width="80"  >
+                                <GridViewColumn Header="Price" Width="80">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Price, StringFormat={}{0:#,0}}" HorizontalAlignment="Right"  />
+                                            <TextBlock Text="{Binding Price, StringFormat={}{0:#,0}}" HorizontalAlignment="Right" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
-
                                 </GridViewColumn>
-
                             </GridView>
                         </ListView.View>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <prism:InvokeCommandAction 
-                            Command="{Binding AccountJournalsTableDoubleClick}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
 
                     </ListView>
-                    <!--<Border Grid.Column="0" 
-                        BorderBrush="Silver" 
-                        BorderThickness="1" />-->
                 </Grid>
-                <!--<Border BorderBrush="Silver" 
-                        BorderThickness="1" 
-                        Grid.RowSpan="3"/>-->
             </Grid>
         </Grid>
 

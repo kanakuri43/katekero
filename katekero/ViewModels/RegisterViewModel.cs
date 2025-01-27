@@ -27,6 +27,7 @@ namespace katekero.ViewModels
 
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand CustomerSearchCommand { get; }
+        public DelegateCommand<Product> AddSaleDetailCommand { get; }
 
         public int SaleNo
         {
@@ -82,6 +83,10 @@ namespace katekero.ViewModels
 
             CancelCommand = new DelegateCommand(CancelCommandExecute);
             CustomerSearchCommand = new DelegateCommand(CustomerSearchCommandExecute);
+            AddSaleDetailCommand = new DelegateCommand<Product>(AddSaleDetail);
+
+            // Salesの初期化
+            Sales = new ObservableCollection<Sale>();
 
             // 商品マスタ
             using (var context = new AppDbContext())
@@ -95,7 +100,36 @@ namespace katekero.ViewModels
                 ProductCategories = new ObservableCollection<ProductCategory>(context.ProductCategories.ToList());
             }
 
+            var sale = new Sale
+            {
+                CustomerId = 1,
+                CustomerName ="OBISAN",
+                ProductId = 1,
+                ProductName = "じゃがいも",
+                Quantity = 1, // 初期数量を1とする
+                Price = 100,
+                Amount = 100 // 初期数量が1なので価格と同じ
+            };
+            Sales.Add(sale);
+
         }
+
+        private void AddSaleDetail(Product product)
+        {
+            if (product != null)
+            {
+                var sale = new Sale
+                {
+                    ProductId = product.Id,
+                    ProductName = product.Name,
+                    Quantity = 1, // 初期数量を1とする
+                    Price = product.Price,
+                    Amount = product.Price // 初期数量が1なので価格と同じ
+                };
+                Sales.Add(sale);
+            }
+        }
+
         private void SaveCommandExecute()
         {
             using (var context = new AppDbContext())
