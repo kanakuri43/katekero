@@ -12,9 +12,10 @@ using System.Security.Principal;
 
 namespace katekero.ViewModels
 {
-	public class RegisterViewModel : BindableBase, INavigationAware
+    public class RegisterViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
+        private int _saleId;
         private int _saleNo;
         private ObservableCollection<Customer> _customers;
         private ObservableCollection<Product> _products;
@@ -24,11 +25,19 @@ namespace katekero.ViewModels
         private int _selectedProductId;
         private int _customerId;
         private string _customerName;
+        private int _totalAmount;
+        private int _includedTaxPrice;
 
+        public DelegateCommand SaveCommand { get; }
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand CustomerSearchCommand { get; }
         public DelegateCommand<Product> AddSaleDetailCommand { get; }
 
+        public int SaleId
+        {
+            get { return _saleId; }
+            set { SetProperty(ref _saleId, value); }
+        }
         public int SaleNo
         {
             get { return _saleNo; }
@@ -75,14 +84,25 @@ namespace katekero.ViewModels
             get { return _customerName; }
             set { SetProperty(ref _customerName, value); }
         }
+        public int TotalAmount
+        {
+            get { return _totalAmount; }
+            set { SetProperty(ref _totalAmount, value); }
+        }
+        public int IncludedTaxPrice
+        {
+            get { return _includedTaxPrice; }
+            set { SetProperty(ref _includedTaxPrice, value); }
+        }
 
 
         public RegisterViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
 
-            CancelCommand = new DelegateCommand(CancelCommandExecute);
-            CustomerSearchCommand = new DelegateCommand(CustomerSearchCommandExecute);
+            SaveCommand = new DelegateCommand(Save);
+            CancelCommand = new DelegateCommand(Cancel);
+            CustomerSearchCommand = new DelegateCommand(CustomerSearch);
             AddSaleDetailCommand = new DelegateCommand<Product>(AddSaleDetail);
 
             // Salesの初期化
@@ -92,6 +112,11 @@ namespace katekero.ViewModels
             using (var context = new AppDbContext())
             {
                 Products = new ObservableCollection<Product>(context.Products.ToList());
+            }            
+            // 得意先マスタ
+            using (var context = new AppDbContext())
+            {
+                Customers = new ObservableCollection<Customer>(context.Customers.ToList());
             }
 
             //商品分類マスタ
@@ -100,17 +125,8 @@ namespace katekero.ViewModels
                 ProductCategories = new ObservableCollection<ProductCategory>(context.ProductCategories.ToList());
             }
 
-            var sale = new Sale
-            {
-                CustomerId = 1,
-                CustomerName ="OBISAN",
-                ProductId = 1,
-                ProductName = "じゃがいも",
-                Quantity = 1, // 初期数量を1とする
-                Price = 100,
-                Amount = 100 // 初期数量が1なので価格と同じ
-            };
-            Sales.Add(sale);
+            TotalAmount = 1234;
+            IncludedTaxPrice = 123;
 
         }
 
@@ -120,6 +136,11 @@ namespace katekero.ViewModels
             {
                 var sale = new Sale
                 {
+                    State = 0,
+                    SaleNo = this.SaleNo,
+                    LineNo = 1,
+                    CustomerId = this.CustomerId,
+                    CustomerName = this.CustomerName,
                     ProductId = product.Id,
                     ProductName = product.Name,
                     Quantity = 1, // 初期数量を1とする
@@ -130,51 +151,107 @@ namespace katekero.ViewModels
             }
         }
 
-        private void SaveCommandExecute()
+        private void Save()
         {
             using (var context = new AppDbContext())
             {
+                var dt = DateTime.Now;
                 if (this.SaleNo == 0)
                 {
-                    // Create
-                    var sale = new Sale
+                    foreach (var sale in _sales)
                     {
-
-                    };
-                    context.Sales.Add(sale);
-
-
-                    context.SaveChanges();
+                        // 新規データとして追加
+                        sale.CreatedAt = dt;
+                        sale.UpdatedAt = dt;
+                        context.Sales.Add(sale);
+                    }
                 }
+                else
+                {
+                    foreach (var sale in _sales)
+                    {
+                        // 既存データを更新
+                        var existingSale = context.Sales.FirstOrDefault(s => s.SaleNo == sale.SaleNo);
+                        if (existingSale != null)
+                        {
+                            existingSale.CustomerId = sale.CustomerId;
+                            existingSale.CustomerName = sale.CustomerName;
+                            existingSale.ProductId = sale.ProductId;
+                            existingSale.ProductName = sale.ProductName;
+                            existingSale.Quantity = sale.Quantity;
+                            existingSale.Price = sale.Price;
+                            existingSale.Amount = sale.Amount;
+                            existingSale.UpdatedAt = dt;
+                        }
+                    }
+                }
+
+                context.SaveChanges();
             }
         }
 
-        private void CancelCommandExecute()
+        private void Cancel()
         {
             // Home
             var p = new NavigationParameters();
             _regionManager.RequestNavigate("ContentRegion", nameof(Dashboard), p);
         }
 
-        private void CustomerSearchCommandExecute()
+        private void CustomerSearch()
         {
             // 得意先検索
             var p = new NavigationParameters();
-            _regionManager.RequestNavigate("ContentRegion", nameof(CustomerSearch), p);
+            p.Add(nameof(CustomerSearchViewModel.SaleNo), this.SaleNo);
+            _regionManager.RequestNavigate("ContentRegion", nameof(Views.CustomerSearch), p);
 
         }
 
         private void ShowDetails(int SaleNo)
         {
-            
+            using var context = new AppDbContext();
+            var s = new ObservableCollection<Sale>(context.Sales
+                                                          .Where(j => j.SaleNo == SaleNo)
+                                                          .ToList());
+            this.Sales = s;
+
+            if (SaleNo == 0)
+            {
+                if (this.CustomerId == 0)
+                {
+                    // 新規登録時
+
+                }
+                else
+                {
+                    // 新規登録時に得意先検索して、選んで戻ってきた
+                    // CustomerIdでCustomersを検索
+                    var customer = this.Customers.FirstOrDefault(c => c.Id == this.CustomerId);
+                    this.CustomerName = customer.Name;
+                }
+            }
+            else
+            {
+                if (this.CustomerId == 0)
+                {
+                    //既存売上呼び出しで、得意先を選ばないで帰ってきた
+                    // SalesのCustomerNameを表示
+                    this.CustomerName = this.Sales.Select(sale => sale.CustomerName).FirstOrDefault();
+                }
+                else 
+                {
+                    // SalesのCustomerNameを表示
+                    this.CustomerName = this.Sales.Select(sale => sale.CustomerName).FirstOrDefault();
+                }
+            }
+
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            // TODO
-            // Sale Noを受け取った時の処理
+
             this.SaleNo = navigationContext.Parameters.GetValue<int>(nameof(SaleNo));
-            ShowDetails(SaleNo);
+            this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
+            ShowDetails(this.SaleNo);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

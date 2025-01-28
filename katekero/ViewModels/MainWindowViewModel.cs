@@ -7,7 +7,7 @@ namespace katekero.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         private readonly IRegionManager _regionManager;
-        private string _title = "Prism Application";
+        private string _title = "KATEKERO";
         public string Title
         {
             get { return _title; }

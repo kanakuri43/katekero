@@ -110,7 +110,6 @@
                         Orientation="Vertical">
                 <DatePicker Grid.Column="4"
                             SelectedDate="2025/12/31"/>
-                <TextBlock Text="未請求"/>
 
             </StackPanel>
 
@@ -150,7 +149,7 @@
                     <TextBlock Grid.Column="0"
                                FontSize="20"
                                Background="WhiteSmoke"
-                               Text="オビサン株式会社"/>
+                               Text="{Binding CustomerName}"/>
                     <Button Grid.Column="1"
                             Command="{Binding CustomerSearchCommand}">
                         <Rectangle Width="16" Height="16">
@@ -184,14 +183,9 @@
                                    TextAlignment="Right"
                                    FontSize="32" 
                                    VerticalAlignment="Center"
-                                   Text="\ 12,345"/>
+                                   Text="{Binding TotalAmount}"/>
                     <TextBlock Grid.Row="1" 
-                               Text="内消費税 \ 1,234"
-                               FontSize="14" 
-                               VerticalAlignment="Center"
-                               TextAlignment="Right"/>
-                    <TextBlock Grid.Row="2" 
-                               Text="粗利 \ 1,234"
+                               Text="{Binding IncludedTaxPrice}"
                                FontSize="14" 
                                VerticalAlignment="Center"
                                TextAlignment="Right"/>
@@ -263,7 +257,7 @@
                     <ListView Grid.Column="2"
                               SelectedValuePath="Id"
                               ItemsSource="{Binding Products}" 
-                              SelectedValue="{Binding SelectedProductId}">
+                              SelectedValue="{Binding ProductId}">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
