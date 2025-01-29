@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace katekero.ViewModels
 {
-    public class DashboardViewModel : BindableBase
+    public class DashboardViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
         private ObservableCollection<Sale> _sales;
@@ -39,6 +39,8 @@ namespace katekero.ViewModels
             SaleDoubleClickCommand = new DelegateCommand(SaleDoubleClick);
             SelectedDateChangedCommand = new DelegateCommand(SelectedDateChanged);
             RegisterCommand = new DelegateCommand(Register);
+            ForwardCommand = new DelegateCommand(Forward);
+            BackwardCommand = new DelegateCommand(Backward);
 
             using (var context = new AppDbContext())
             {
@@ -46,12 +48,14 @@ namespace katekero.ViewModels
             }
 
             SelectedDate = DateTime.Now;
-            ShowSales();
+            ShowSalesList();
 
         }
         public DelegateCommand RegisterCommand { get; }
         public DelegateCommand SaleDoubleClickCommand { get; }
         public DelegateCommand SelectedDateChangedCommand { get; }
+        public DelegateCommand ForwardCommand { get; }
+        public DelegateCommand BackwardCommand { get; }
 
         private void Register()
         {
@@ -59,6 +63,16 @@ namespace katekero.ViewModels
             p.Add(nameof(RegisterViewModel.SaleNo), 0);
             _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
 
+        }
+        private void Forward()
+        {
+            this.SelectedDate = this.SelectedDate.AddDays(1);
+            ShowSalesList();
+        }
+        private void Backward()
+        {
+            this.SelectedDate = this.SelectedDate.AddDays(-1);
+            ShowSalesList();
         }
 
         private void SaleDoubleClick()
@@ -70,10 +84,10 @@ namespace katekero.ViewModels
         }
         private void SelectedDateChanged()
         {
-            ShowSales();
+            ShowSalesList();
         }
 
-        private void ShowSales()
+        private void ShowSalesList()
         {
             using var context = new AppDbContext();
 
@@ -84,6 +98,22 @@ namespace katekero.ViewModels
                     .OrderBy(s => s.SaleNo)
                     .ThenBy(s => s.LineNo)
             );
+
+        }
+
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            SelectedDate = DateTime.Now;
+            ShowSalesList();
+        }
+
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return false;
+        }
+
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
 
         }
     }

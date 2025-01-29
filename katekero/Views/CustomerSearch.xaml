@@ -57,9 +57,9 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="NAME" 
-                                                Width="50" 
-                                                DisplayMemberBinding="{Binding Name}" 
-                                                />
+                                    Width="250" 
+                                    DisplayMemberBinding="{Binding Name}" 
+                                    />
 
                 </GridView>
             </ListView.View>

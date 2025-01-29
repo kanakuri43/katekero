@@ -22,7 +22,8 @@
                 <StackPanel Grid.Row="0"
                             Orientation="Horizontal">
                     <Button Content="＜"
-                            IsEnabled="False"/>
+                            Command="{Binding BackwardCommand}"/>
+
                     <DatePicker Width="100"
                                 SelectedDate="{Binding SelectedDate}"
                                 HorizontalAlignment="Left">
@@ -35,7 +36,8 @@
                         </i:Interaction.Triggers>
                     </DatePicker>
                     <Button Content="＞"
-                            IsEnabled="False"/>
+                            Command="{Binding ForwardCommand}"/>
+
                     <TextBox Grid.Row="0" 
                              Width="200"
                              Margin="20,0,0,0"
