@@ -7,14 +7,22 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO.Packaging;
+using System.IO;
 using System.Linq;
 using System.Security.Principal;
+using System.Windows.Documents;
+using System.Windows.Markup;
+using System.Windows.Xps.Packaging;
+using System.Windows.Xps;
 
 namespace katekero.ViewModels
 {
     public class RegisterViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
+        private DateTime _saleDate;
         private int _saleId;
         private int _saleNo;
         private ObservableCollection<Customer> _customers;
@@ -29,14 +37,21 @@ namespace katekero.ViewModels
         private int _includedTaxPrice;
 
         public DelegateCommand SaveCommand { get; }
+        public DelegateCommand DeleteCommand { get; }
+        public DelegateCommand PrintCommand { get; }
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand CustomerSearchCommand { get; }
-        public DelegateCommand<Product> AddSaleDetailCommand { get; }
-
+        //public DelegateCommand<Product> AddSaleDetailCommand { get; }
+        public DelegateCommand ProductDoubleClickCommand { get; }
         public int SaleId
         {
             get { return _saleId; }
             set { SetProperty(ref _saleId, value); }
+        }
+        public DateTime SaleDate
+        {
+            get { return _saleDate; }
+            set { SetProperty(ref _saleDate, value); }
         }
         public int SaleNo
         {
@@ -101,9 +116,11 @@ namespace katekero.ViewModels
             _regionManager = regionManager;
 
             SaveCommand = new DelegateCommand(Save);
+            DeleteCommand = new DelegateCommand(Delete);
+            PrintCommand = new DelegateCommand(Print);
             CancelCommand = new DelegateCommand(Cancel);
             CustomerSearchCommand = new DelegateCommand(CustomerSearch);
-            AddSaleDetailCommand = new DelegateCommand<Product>(AddSaleDetail);
+            ProductDoubleClickCommand = new DelegateCommand(ProductDoubleClick);
 
             // Salesの初期化
             Sales = new ObservableCollection<Sale>();
@@ -130,12 +147,15 @@ namespace katekero.ViewModels
 
         }
 
-        private void AddSaleDetail(Product product)
+        private void AddSaleDetail()
         {
-            if (product != null)
+            using (var context = new AppDbContext())
             {
+                var product = context.Products.FirstOrDefault(p => p.Id == _selectedProductId);
+
                 var sale = new Sale
                 {
+
                     State = 0,
                     SaleNo = this.SaleNo,
                     LineNo = 1,
@@ -148,7 +168,7 @@ namespace katekero.ViewModels
                     Amount = product.Price // 初期数量が1なので価格と同じ
                 };
                 Sales.Add(sale);
-            }
+            }            
         }
 
         private void Save()
@@ -158,9 +178,18 @@ namespace katekero.ViewModels
                 var dt = DateTime.Now;
                 if (this.SaleNo == 0)
                 {
+                    // 売上番号設定
+                    int maxSaleNo = context.Sales.Max(s => (int?)s.SaleNo) ?? 0;
+                    int newSaleNo = maxSaleNo + 1;
+
+                    var lineNo = 0;
                     foreach (var sale in _sales)
                     {
-                        // 新規データとして追加
+                        lineNo++;
+
+                        sale.SaleDate = this.SaleDate;
+                        sale.SaleNo = newSaleNo; 
+                        sale.LineNo = lineNo;
                         sale.CreatedAt = dt;
                         sale.UpdatedAt = dt;
                         context.Sales.Add(sale);
@@ -168,28 +197,48 @@ namespace katekero.ViewModels
                 }
                 else
                 {
-                    foreach (var sale in _sales)
-                    {
-                        // 既存データを更新
-                        var existingSale = context.Sales.FirstOrDefault(s => s.SaleNo == sale.SaleNo);
-                        if (existingSale != null)
-                        {
-                            existingSale.CustomerId = sale.CustomerId;
-                            existingSale.CustomerName = sale.CustomerName;
-                            existingSale.ProductId = sale.ProductId;
-                            existingSale.ProductName = sale.ProductName;
-                            existingSale.Quantity = sale.Quantity;
-                            existingSale.Price = sale.Price;
-                            existingSale.Amount = sale.Amount;
-                            existingSale.UpdatedAt = dt;
-                        }
-                    }
+
                 }
 
                 context.SaveChanges();
             }
         }
+        private void Delete()
+        {
+            using (var context = new AppDbContext())
+            {
+                // 選択されているSaleNoに基づいて削除
+                var salesToDelete = context.Sales.Where(s => s.SaleNo == this.SaleNo).ToList();
+                if (salesToDelete.Any())
+                {
+                    context.Sales.RemoveRange(salesToDelete);
+                    context.SaveChanges();
+                }
+            }
+            this.SaleNo = 0;
+            this.CustomerId = 0;
+            ShowDetails(0);
+        }
 
+        private void Print()
+        {
+
+            var printDialog = new System.Windows.Controls.PrintDialog();
+            if (printDialog.ShowDialog() == true)
+            {
+                // 印刷する内容を作成
+                var salesSlipView = new Views.SalesSlip();
+                salesSlipView.DataContext = this; // ViewModelをViewにバインド
+
+                // 印刷設定
+                salesSlipView.Measure(new System.Windows.Size(printDialog.PrintableAreaWidth, printDialog.PrintableAreaHeight));
+                salesSlipView.Arrange(new System.Windows.Rect(new System.Windows.Size(printDialog.PrintableAreaWidth, printDialog.PrintableAreaHeight)));
+
+                // 印刷実行
+                printDialog.PrintVisual(salesSlipView, "Sales Slip");
+            }
+
+        }
         private void Cancel()
         {
             // Home
@@ -204,6 +253,10 @@ namespace katekero.ViewModels
             p.Add(nameof(CustomerSearchViewModel.SaleNo), this.SaleNo);
             _regionManager.RequestNavigate("ContentRegion", nameof(Views.CustomerSearch), p);
 
+        }
+        private void ProductDoubleClick()
+        {
+            AddSaleDetail();
         }
 
         private void ShowDetails(int SaleNo)
@@ -244,6 +297,10 @@ namespace katekero.ViewModels
                 }
             }
 
+            if (SaleNo == 0)
+            {
+                SaleDate = DateTime.Now;
+            }
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

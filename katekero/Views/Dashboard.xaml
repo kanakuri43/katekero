@@ -3,6 +3,7 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"             
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid Margin="10" Background="White">
         <Grid>
@@ -23,10 +24,23 @@
                     <Button Content="＜"
                             IsEnabled="False"/>
                     <DatePicker Width="100"
-                                SelectedDate="2025/01/10"
-                                HorizontalAlignment="Left"/>
+                                SelectedDate="{Binding SelectedDate}"
+                                HorizontalAlignment="Left">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectedDateChanged">
+                                <prism:InvokeCommandAction 
+                                Command="{Binding SelectedDateChangedCommand}" 
+                                TriggerParameterPath="AddedItems"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </DatePicker>
                     <Button Content="＞"
                             IsEnabled="False"/>
+                    <TextBox Grid.Row="0" 
+                             Width="200"
+                             Margin="20,0,0,0"
+                             Controls:TextBoxHelper.Watermark="得意先検索"/>
+
                 </StackPanel>
                 <ListView Grid.Row="2"
                           ItemsSource="{Binding Sales}"
@@ -35,13 +49,12 @@
                     
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="SaleNo" DisplayMemberBinding="{Binding SaleNo}" Width="150"/>
-                            <GridViewColumn Header="LineNo" DisplayMemberBinding="{Binding LineNo}" Width="50"/>
-                            <GridViewColumn Header="CustomerName" DisplayMemberBinding="{Binding CustomerName}" Width="80"/>
-                            <GridViewColumn Header="ProductName" DisplayMemberBinding="{Binding ProductName}" Width="80"/>
-                            <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}" Width="80"/>
-                            <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="80"/>
-                            <GridViewColumn Header="Amount" DisplayMemberBinding="{Binding Amount}" Width="80"/>
+                            <GridViewColumn Header="Sale#" DisplayMemberBinding="{Binding SaleNo}" Width="60"/>
+                            <GridViewColumn Header="Line#" DisplayMemberBinding="{Binding LineNo}" Width="60"/>
+                            <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="160"/>
+                            <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
+                            <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
+                            <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="50"/>
                         </GridView>
                     </ListView.View>
                     <i:Interaction.Triggers>
@@ -59,7 +72,9 @@
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="64"/>
                 </Grid.RowDefinitions>
                 <Button Grid.Row="0" Grid.Column="1"
                         Margin="2"
@@ -78,7 +93,7 @@
                                 </DrawingBrush>
                             </Rectangle.Fill>
                         </Rectangle>
-                        <TextBlock Text="新規"
+                        <TextBlock Text="売上登録"
                                FontSize="12"
                                Margin="4"/>
 
@@ -86,33 +101,21 @@
 
                 </Button>
                 <Button Grid.Row="1" Grid.Column="1"
-                        Margin="2"
-                        Command="{Binding EditCommand}">
-
-                    <StackPanel Orientation="Horizontal">
-                        <Rectangle Width="16" Height="16">
-                            <Rectangle.Fill>
-                                <DrawingBrush>
-                                    <DrawingBrush.Drawing>
-                                        <DrawingGroup>
-                                            <DrawingGroup.Children>
-                                                <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                                <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M4,16C2.897,16,2,15.103,2,14L2,5 1,5 1,2 4,2C4,0.897,4.897,0,6,0L9,0C10.103,0,11,0.897,11,2L14,2 14,5 13,5 13,14C13,15.103,12.103,16,11,16z" />
-                                                <GeometryDrawing Brush="#FFEFEFF0" Geometry="F1M10,12L9,12 9,6 10,6z M8,12L7,12 7,6 8,6z M6,12L5,12 5,6 6,6z M4,14L11,14 11,4 4,4z" />
-                                                <GeometryDrawing Brush="#FF424242" Geometry="F1M11,4L4,4 4,14 11,14z M6,3L9,3 9,2 6,2z M13,3L13,4 12,4 12,14C12,14.552,11.552,15,11,15L4,15C3.448,15,3,14.552,3,14L3,4 2,4 2,3 5,3 5,2C5,1.448,5.448,1,6,1L9,1C9.552,1,10,1.448,10,2L10,3z M10,6L9,6 9,12 10,12z M8,6L7,6 7,12 8,12z M6,12L5,12 5,6 6,6z" />
-                                            </DrawingGroup.Children>
-                                        </DrawingGroup>
-                                    </DrawingBrush.Drawing>
-                                </DrawingBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
-
-                        <TextBlock Text="削除"
-                               FontSize="12"
-                               Margin="4"/>
-                    </StackPanel>
-
+                        Margin="2">
                 </Button>
+                <Button Grid.Row="2" Grid.Column="1"
+                        Margin="2">
+                </Button>
+                <Button Grid.Row="3" Grid.Column="1"
+                        Margin="2">
+                </Button>
+                <Button Grid.Row="4" Grid.Column="1"
+                        Margin="2">
+                </Button>
+                <Image Grid.Row="7" 
+                       Source="{StaticResource IconImage}"
+                       Stretch="Uniform"
+                       Width="64" Height="64" />
             </Grid>
         </Grid>
 

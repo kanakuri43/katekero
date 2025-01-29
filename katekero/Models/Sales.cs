@@ -11,8 +11,11 @@ namespace katekero.Models
     public class Sale
     {
         public int Id { get; set; }
+
         [Column("state")]
         public int State { get; set; }
+        [Column("sale_date")]
+        public DateTime SaleDate { get; set; }
         [Column("sale_no")]
         public int SaleNo { get; set; }
         [Column("line_no")]

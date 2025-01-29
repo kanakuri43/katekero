@@ -86,8 +86,8 @@
                 </Rectangle>
             </Button>
             <Button Grid.Column="3"
-                    IsEnabled="False"
-                    Margin="2">
+                    Margin="2"
+                    Command="{Binding PrintCommand}">
                 <Rectangle Width="16 " Height="16">
                     <Rectangle.Fill>
                         <DrawingBrush>
@@ -109,7 +109,7 @@
             <StackPanel Grid.Column="5" 
                         Orientation="Vertical">
                 <DatePicker Grid.Column="4"
-                            SelectedDate="2025/12/31"/>
+                            SelectedDate="{Binding SaleDate}"/>
 
             </StackPanel>
 
@@ -179,16 +179,19 @@
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0"
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Row="0" Grid.Column="1"
+                               Text="合計"
+                               FontSize="20"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2"
                                    TextAlignment="Right"
                                    FontSize="32" 
                                    VerticalAlignment="Center"
-                                   Text="{Binding TotalAmount}"/>
-                    <TextBlock Grid.Row="1" 
-                               Text="{Binding IncludedTaxPrice}"
-                               FontSize="14" 
-                               VerticalAlignment="Center"
-                               TextAlignment="Right"/>
+                                   Text="{Binding TotalAmount, StringFormat='\\{0:N0}'}"/>
 
                 </Grid>
 
@@ -201,10 +204,9 @@
                           FontSize="14">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="商品名" DisplayMemberBinding="{Binding ProductName}" Width="150"/>
-                            <GridViewColumn Header="数量" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
-                            <GridViewColumn Header="価格" DisplayMemberBinding="{Binding Price}" Width="80"/>
-                            <GridViewColumn Header="合計" DisplayMemberBinding="{Binding Amount}" Width="80"/>
+                            <GridViewColumn Header="商品名" DisplayMemberBinding="{Binding ProductName}" Width="200"/>
+                            <GridViewColumn Header="価格" DisplayMemberBinding="{Binding Price}" Width="100"/>
+                            <GridViewColumn Header="数量" DisplayMemberBinding="{Binding Quantity}" Width="100"/>
                         </GridView>
                     </ListView.View>
 
@@ -225,7 +227,6 @@
                 </Grid.RowDefinitions>
 
                 <TextBox Grid.Row="0" 
-                         IsEnabled="False"
                          Controls:TextBoxHelper.Watermark="商品検索"/>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
@@ -255,9 +256,9 @@
 
                     </ListView>
                     <ListView Grid.Column="2"
-                              SelectedValuePath="Id"
-                              ItemsSource="{Binding Products}" 
-                              SelectedValue="{Binding ProductId}">
+                              ItemsSource="{Binding Products}"                               
+                              SelectedValue="{Binding SelectedProductId}"
+                              SelectedValuePath="Id">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -275,7 +276,11 @@
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
-
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <prism:InvokeCommandAction Command="{Binding ProductDoubleClickCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </ListView>
                 </Grid>
             </Grid>

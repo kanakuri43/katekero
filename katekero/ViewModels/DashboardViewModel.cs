@@ -15,6 +15,7 @@ namespace katekero.ViewModels
         private readonly IRegionManager _regionManager;
         private ObservableCollection<Sale> _sales;
         private int _selectedSaleNo;
+        private DateTime _selectedDate;
 
         public ObservableCollection<Sale> Sales
         {
@@ -26,11 +27,17 @@ namespace katekero.ViewModels
             get { return _selectedSaleNo; }
             set { SetProperty(ref _selectedSaleNo, value); }
         }
+        public DateTime SelectedDate
+        {
+            get { return _selectedDate; }
+            set { SetProperty(ref _selectedDate, value); }
+        }
 
         public DashboardViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
             SaleDoubleClickCommand = new DelegateCommand(SaleDoubleClick);
+            SelectedDateChangedCommand = new DelegateCommand(SelectedDateChanged);
             RegisterCommand = new DelegateCommand(Register);
 
             using (var context = new AppDbContext())
@@ -38,10 +45,13 @@ namespace katekero.ViewModels
                 Sales = new ObservableCollection<Sale>(context.Sales.ToList());
             }
 
+            SelectedDate = DateTime.Now;
+            ShowSales();
 
         }
         public DelegateCommand RegisterCommand { get; }
         public DelegateCommand SaleDoubleClickCommand { get; }
+        public DelegateCommand SelectedDateChangedCommand { get; }
 
         private void Register()
         {
@@ -50,12 +60,31 @@ namespace katekero.ViewModels
             _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
 
         }
+
         private void SaleDoubleClick()
         {
             var p = new NavigationParameters();
             p.Add(nameof(RegisterViewModel.SaleNo), _selectedSaleNo);
             p.Add(nameof(RegisterViewModel.CustomerId), 0);
             _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
+        }
+        private void SelectedDateChanged()
+        {
+            ShowSales();
+        }
+
+        private void ShowSales()
+        {
+            using var context = new AppDbContext();
+
+            // 条件に基づいてデータをフィルタリング
+            this.Sales = new ObservableCollection<Sale>(
+                context.Sales
+                    .Where(s => s.SaleDate.Date == this.SelectedDate.Date)
+                    .OrderBy(s => s.SaleNo)
+                    .ThenBy(s => s.LineNo)
+            );
+
         }
     }
 }

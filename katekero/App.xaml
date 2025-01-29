@@ -12,6 +12,9 @@
                 <!-- Theme setting -->
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.green.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <BitmapImage x:Key="IconImage" UriSource="katekero_icon.ico" />
         </ResourceDictionary>
+
     </Application.Resources>
 </prism:PrismApplication>

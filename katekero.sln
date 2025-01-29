@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "katekero", "katekero\katekero.csproj", "{2BBA868D-86BC-4F4A-99B5-9DF42CD9E07A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "invoice", "invoice\invoice.csproj", "{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{2BBA868D-86BC-4F4A-99B5-9DF42CD9E07A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BBA868D-86BC-4F4A-99B5-9DF42CD9E07A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BBA868D-86BC-4F4A-99B5-9DF42CD9E07A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -12,12 +12,13 @@
     <Content Include="config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="katekero_icon.ico" />
+    <Content Include="katekero_icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.1" />
-    <PackageReference Include="PDFsharp" Version="6.1.1" />
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
   </ItemGroup>
 </Project>
