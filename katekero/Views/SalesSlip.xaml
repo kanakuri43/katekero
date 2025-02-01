@@ -3,15 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"             
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid Margin="10" Background="White">
+    <Grid Margin="60" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="140"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="300"/>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -23,12 +23,11 @@
             <TextBlock Grid.Column="1" 
                        HorizontalAlignment="Center"
                        FontSize="20"
-                       Text="納品書"/>
+                       Text="{Binding Title}"/>
             <StackPanel Grid.Column="2"
                         HorizontalAlignment="Right">
-                <TextBlock Text="2025/12/31"/>
-                <TextBlock Text="{Binding SaleNo}"/>
-
+                <TextBlock Text="{Binding SaleDate, StringFormat='yyyy/MM/dd'}"/>
+                <TextBlock Text="{Binding SaleNo, StringFormat='S#\{0\}'}"/>
             </StackPanel>
         </Grid>
 
@@ -38,40 +37,131 @@
                 <ColumnDefinition Width="20"/>
                 <ColumnDefinition Width="200"/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" 
-                        Orientation="Vertical">
-                <TextBlock Text="〒998-0102"/>
-                <TextBlock Text="山形県酒田市京田２丁目６９−２"/>
-                <TextBlock Text="{Binding CustomerName}"/>
-            </StackPanel>
-            <StackPanel Grid.Column="2" 
-                        Orientation="Vertical">
-                <TextBlock Text="〒990-8668"/>
-                <TextBlock Text="山形県山形市流通センター１丁目"/>
-                <TextBlock Text="オビサン株式会社"/>
-            </StackPanel>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Text="〒998-0102"/>
+                <TextBlock Grid.Row="1" Text="山形県酒田市京田２丁目６９−２"/>
+                <TextBlock Grid.Row="2" Text="{Binding CustomerName, StringFormat='\{0\} 御中'}"/>
+                <TextBlock Grid.Row="4" Text="毎度ありがとうございます。"/>
+
+            </Grid>
+
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="64"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Image Grid.Row="0" 
+                       Source="{StaticResource IconImage}"
+                       Stretch="Uniform"
+                       Width="64" Height="64" />
+                <TextBlock Grid.Row="1" Text="〒990-8668"/>
+                <TextBlock Grid.Row="2" Text="山形県山形市流通センター１丁目"/>
+                <TextBlock Grid.Row="3" Text="カテケロ株式会社"/>
+            </Grid>
 
         </Grid>
 
-        <DataGrid Grid.Row="4"
-                      ItemsSource="{Binding Sales}" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Sale No" Binding="{Binding SaleNo}" Width="*"/>
-                <DataGridTextColumn Header="Customer Name" Binding="{Binding CustomerName}" Width="*"/>
-                <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="*"/>
-                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
-                <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="*"/>
-                <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <ListView Grid.Row="4" ItemsSource="{Binding Sales}">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="#" Width="40">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding LineNo, StringFormat=N0}" TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="300">
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Qty" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Quantity, StringFormat=N0}" TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Price" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Price, StringFormat=N0}" TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Amount" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Amount, StringFormat=N0}" TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Background" Value="LightGray"/>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
 
-        <Grid Grid.Row="6">
-            <StackPanel HorizontalAlignment="Right"
-                        Orientation="Vertical">
-                <TextBlock Text="小計"/>
-                <TextBlock Text="消費税"/>
-                <TextBlock Text="合計"/>
-            </StackPanel>
+
+        <Grid Grid.Row="6"
+              Width="200"
+              HorizontalAlignment="Right">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.RowSpan="3"
+                    Background="LightGray"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Subtotal"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" 
+                       Text="{Binding Subtotal, StringFormat=N0}"
+                       HorizontalAlignment="Right"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Tax Price"/>
+            <TextBlock Grid.Row="1" Grid.Column="1" 
+                       Text="{Binding TaxPrice, StringFormat=N0}"
+                       HorizontalAlignment="Right"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Total Amount"/>
+            <TextBlock Grid.Row="2" Grid.Column="1" 
+                       Text="{Binding TotalAmount, StringFormat=N0}"
+                       HorizontalAlignment="Right"/>
+            
         </Grid>
 
     </Grid>

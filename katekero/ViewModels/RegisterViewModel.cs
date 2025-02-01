@@ -35,6 +35,7 @@ namespace katekero.ViewModels
         private string _customerName;
         private int _totalAmount;
         private int _includedTaxPrice;
+        //private SalesSlipViewModel _salesSlipViewModel;
 
         public DelegateCommand SaveCommand { get; }
         public DelegateCommand DeleteCommand { get; }
@@ -144,7 +145,6 @@ namespace katekero.ViewModels
 
             TotalAmount = 1234;
             IncludedTaxPrice = 123;
-
         }
 
         private void AddSaleDetail()
@@ -158,7 +158,7 @@ namespace katekero.ViewModels
 
                     State = 0,
                     SaleNo = this.SaleNo,
-                    LineNo = 1,
+                    //LineNo = 1,
                     CustomerId = this.CustomerId,
                     CustomerName = this.CustomerName,
                     ProductId = product.Id,
@@ -228,6 +228,10 @@ namespace katekero.ViewModels
                 // 印刷する内容を作成
                 var salesSlipView = new Views.SalesSlip();
                 var salesSlipViewModel = new SalesSlipViewModel(new ObservableCollection<Sale>(this.Sales));
+
+                // ここでTitleを設定
+                salesSlipViewModel.SetTitle("納品書"); 
+
                 salesSlipView.DataContext = salesSlipViewModel;
 
                 // 印刷設定
