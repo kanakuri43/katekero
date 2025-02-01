@@ -14,58 +14,70 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition Height="20"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <StackPanel Grid.Row="0"
-                            Orientation="Horizontal">
-                    <Button Content="＜"
-                            Command="{Binding BackwardCommand}"/>
+                <TabControl >
+                    <TabItem Header="未売上">
+                        kintoneから取得した受注データが表示されます
 
-                    <DatePicker Width="100"
+                    </TabItem>
+                    <TabItem Header="売上済">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="20"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0" 
+                                        Orientation="Horizontal"
+                                        Margin="0,20,0,0">
+                                <Button Content="＜" Command="{Binding BackwardCommand}"/>
+
+                                <DatePicker Width="100"
                                 SelectedDate="{Binding SelectedDate}"
                                 HorizontalAlignment="Left">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectedDateChanged">
-                                <prism:InvokeCommandAction 
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectedDateChanged">
+                                            <prism:InvokeCommandAction 
                                 Command="{Binding SelectedDateChangedCommand}" 
                                 TriggerParameterPath="AddedItems"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </DatePicker>
-                    <Button Content="＞"
-                            Command="{Binding ForwardCommand}"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </DatePicker>
+                                <Button Content="＞" Command="{Binding ForwardCommand}"/>
 
-                    <TextBox Grid.Row="0" 
+                                <TextBox Grid.Row="0" 
                              Width="200"
                              Margin="20,0,0,0"
                              Controls:TextBoxHelper.Watermark="得意先検索"/>
 
-                </StackPanel>
-                <ListView Grid.Row="2"
-                          ItemsSource="{Binding Sales}"
-                          SelectedValuePath="SaleNo"
-                          SelectedValue="{Binding SelectedSaleNo}" >
-                    
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Sale#" DisplayMemberBinding="{Binding SaleNo}" Width="60"/>
-                            <GridViewColumn Header="Line#" DisplayMemberBinding="{Binding LineNo}" Width="60"/>
-                            <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="160"/>
-                            <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
-                            <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
-                            <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="50"/>
-                        </GridView>
-                    </ListView.View>
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseDoubleClick">
-                            <prism:InvokeCommandAction 
+                            </StackPanel>
+
+                            <ListView Grid.Row="2" 
+                                      ItemsSource="{Binding Sales}"
+                                      SelectedValuePath="SaleNo"
+                                      SelectedValue="{Binding SelectedSaleNo}" >
+
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="Sale#" DisplayMemberBinding="{Binding SaleNo}" Width="60"/>
+                                        <GridViewColumn Header="Line#" DisplayMemberBinding="{Binding LineNo}" Width="60"/>
+                                        <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="160"/>
+                                        <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
+                                        <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
+                                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="50"/>
+                                    </GridView>
+                                </ListView.View>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                        <prism:InvokeCommandAction 
                             Command="{Binding SaleDoubleClickCommand}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </ListView>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ListView>
+
+                        </Grid>
+
+                    </TabItem>
+                </TabControl>
             </Grid>
             <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
