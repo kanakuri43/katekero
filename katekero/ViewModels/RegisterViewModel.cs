@@ -222,13 +222,13 @@ namespace katekero.ViewModels
 
         private void Print()
         {
-
             var printDialog = new System.Windows.Controls.PrintDialog();
             if (printDialog.ShowDialog() == true)
             {
                 // 印刷する内容を作成
                 var salesSlipView = new Views.SalesSlip();
-                salesSlipView.DataContext = this; // ViewModelをViewにバインド
+                var salesSlipViewModel = new SalesSlipViewModel(new ObservableCollection<Sale>(this.Sales));
+                salesSlipView.DataContext = salesSlipViewModel;
 
                 // 印刷設定
                 salesSlipView.Measure(new System.Windows.Size(printDialog.PrintableAreaWidth, printDialog.PrintableAreaHeight));
@@ -237,7 +237,6 @@ namespace katekero.ViewModels
                 // 印刷実行
                 printDialog.PrintVisual(salesSlipView, "Sales Slip");
             }
-
         }
         private void Cancel()
         {

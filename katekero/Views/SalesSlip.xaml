@@ -27,7 +27,7 @@
             <StackPanel Grid.Column="2"
                         HorizontalAlignment="Right">
                 <TextBlock Text="2025/12/31"/>
-                <TextBlock Text="S#200021"/>
+                <TextBlock Text="{Binding SaleNo}"/>
 
             </StackPanel>
         </Grid>
@@ -42,7 +42,7 @@
                         Orientation="Vertical">
                 <TextBlock Text="〒998-0102"/>
                 <TextBlock Text="山形県酒田市京田２丁目６９−２"/>
-                <TextBlock Text="sharp 庄内 御中"/>
+                <TextBlock Text="{Binding CustomerName}"/>
             </StackPanel>
             <StackPanel Grid.Column="2" 
                         Orientation="Vertical">
