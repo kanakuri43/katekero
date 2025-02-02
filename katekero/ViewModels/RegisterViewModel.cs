@@ -11,11 +11,8 @@ using System.Diagnostics;
 using System.IO.Packaging;
 using System.IO;
 using System.Linq;
-using System.Security.Principal;
-using System.Windows.Documents;
-using System.Windows.Markup;
-using System.Windows.Xps.Packaging;
-using System.Windows.Xps;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace katekero.ViewModels
 {
@@ -37,6 +34,8 @@ namespace katekero.ViewModels
         private int _subTotal;
         private int _taxPrice;
         private int _totalAmount;
+        private string _productSearchText;
+        private ICollectionView _filteredProducts;
 
         public DelegateCommand SaveCommand { get; }
         public DelegateCommand DeleteCommand { get; }
@@ -118,7 +117,19 @@ namespace katekero.ViewModels
             get { return _totalAmount; }
             set { SetProperty(ref _totalAmount, value); }
         }
-
+        public string ProductSearchText
+        {
+            get { return _productSearchText; }
+            set
+            {
+                SetProperty(ref _productSearchText, value);
+                FilterProducts();
+            }
+        }
+        public ICollectionView FilteredProducts
+        {
+            get { return _filteredProducts; }
+        }
 
         public RegisterViewModel(IRegionManager regionManager)
         {
@@ -139,7 +150,10 @@ namespace katekero.ViewModels
             using (var context = new AppDbContext())
             {
                 Products = new ObservableCollection<Product>(context.Products.ToList());
-            }            
+            }
+            _filteredProducts = CollectionViewSource.GetDefaultView(Products);
+            _filteredProducts.Filter = FilterProductByName;
+            
             // 得意先マスタ
             using (var context = new AppDbContext())
             {
@@ -152,6 +166,20 @@ namespace katekero.ViewModels
                 ProductCategories = new ObservableCollection<ProductCategory>(context.ProductCategories.ToList());
             }
 
+        }
+
+        private void FilterProducts()
+        {
+            _filteredProducts.Refresh();
+        }
+
+        private bool FilterProductByName(object item)
+        {
+            if (item is Product product)
+            {
+                return string.IsNullOrEmpty(ProductSearchText) || product.Name.Contains(ProductSearchText, StringComparison.OrdinalIgnoreCase);
+            }
+            return false;
         }
 
         private void AddSaleDetail()

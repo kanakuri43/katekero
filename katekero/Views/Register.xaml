@@ -252,7 +252,8 @@
                 </Grid.RowDefinitions>
 
                 <TextBox Grid.Row="0" 
-                         Controls:TextBoxHelper.Watermark="商品検索"/>
+                         Controls:TextBoxHelper.Watermark="商品検索"
+                         Text="{Binding ProductSearchText, UpdateSourceTrigger=PropertyChanged}"/>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80"/>
@@ -281,7 +282,7 @@
 
                     </ListView>
                     <ListView Grid.Column="2"
-                              ItemsSource="{Binding Products}"                               
+                              ItemsSource="{Binding FilteredProducts}"                               
                               SelectedValue="{Binding SelectedProductId}"
                               SelectedValuePath="Id">
                         <ListView.ItemContainerStyle>
