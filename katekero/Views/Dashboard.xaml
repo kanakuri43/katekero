@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:prism="http://prismlibrary.com/"             
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              prism:ViewModelLocator.AutoWireViewModel="True">
@@ -16,7 +17,27 @@
             <Grid Grid.Column="0">
                 <TabControl >
                     <TabItem Header="未売上">
-                        kintoneから取得した受注データが表示されます
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0"
+                                        Orientation="Horizontal"
+                                        Margin="0,20,0,0">
+                                <Button Grid.Row="0" Grid.Column="0"
+                                        Command="{Binding ReloadCommand}"
+                                        Width="30">
+                                    <iconPacks:PackIconMaterial Kind="Reload"/>
+                                </Button>
+                                <TextBlock Text="{Binding LastFetchedAt}"/>
+
+                            </StackPanel>
+                            <TextBlock Grid.Row="1" Text="{Binding Json}"/>
+
+
+                        </Grid>
 
                     </TabItem>
                     <TabItem Header="売上済">
@@ -29,7 +50,9 @@
                             <StackPanel Grid.Row="0" 
                                         Orientation="Horizontal"
                                         Margin="0,20,0,0">
-                                <Button Content="＜" Command="{Binding BackwardCommand}"/>
+                                <Button Command="{Binding BackwardCommand}">
+                                    <iconPacks:PackIconEntypo Kind="ChevronSmallLeft" Foreground="#FF388934"/>
+                                </Button>
 
                                 <DatePicker Width="100"
                                 SelectedDate="{Binding SelectedDate}"
@@ -42,7 +65,9 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </DatePicker>
-                                <Button Content="＞" Command="{Binding ForwardCommand}"/>
+                                <Button Command="{Binding ForwardCommand}">
+                                    <iconPacks:PackIconEntypo Kind="ChevronSmallRight" Foreground="#FF388934"/>
+                                </Button>
 
                                 <TextBox Grid.Row="0" 
                              Width="200"
