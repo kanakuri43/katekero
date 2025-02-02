@@ -16,7 +16,7 @@
 
             <Grid Grid.Column="0">
                 <TabControl >
-                    <TabItem Header="未売上">
+                    <TabItem Header="受注">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="50"/>
@@ -34,13 +34,18 @@
                                 <TextBlock Text="{Binding LastFetchedAt}"/>
 
                             </StackPanel>
-                            <TextBlock Grid.Row="1" Text="{Binding Json}"/>
+                            <ScrollViewer Grid.Row="1"
+                                          VerticalScrollBarVisibility="Auto">
+                                <TextBlock   Text="{Binding Json}"/>
+
+                            </ScrollViewer>
+
 
 
                         </Grid>
 
                     </TabItem>
-                    <TabItem Header="売上済">
+                    <TabItem Header="売上">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="50"/>
