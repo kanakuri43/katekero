@@ -72,6 +72,15 @@
         </Grid>
 
         <ListView Grid.Row="4" ItemsSource="{Binding Sales}">
+            <!--
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                    <Setter Property="Margin" Value="0"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            -->
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="#" Width="40">

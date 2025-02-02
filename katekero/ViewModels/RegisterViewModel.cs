@@ -33,9 +33,10 @@ namespace katekero.ViewModels
         private int _selectedProductId;
         private int _customerId;
         private string _customerName;
-        private int _totalAmount;
         private int _includedTaxPrice;
-        //private SalesSlipViewModel _salesSlipViewModel;
+        private int _subTotal;
+        private int _taxPrice;
+        private int _totalAmount;
 
         public DelegateCommand SaveCommand { get; }
         public DelegateCommand DeleteCommand { get; }
@@ -44,6 +45,8 @@ namespace katekero.ViewModels
         public DelegateCommand CustomerSearchCommand { get; }
         //public DelegateCommand<Product> AddSaleDetailCommand { get; }
         public DelegateCommand ProductDoubleClickCommand { get; }
+        public DelegateCommand<Sale> DeleteSaleCommand { get; }
+
         public int SaleId
         {
             get { return _saleId; }
@@ -100,15 +103,20 @@ namespace katekero.ViewModels
             get { return _customerName; }
             set { SetProperty(ref _customerName, value); }
         }
+        public int Subtotal
+        {
+            get { return _subTotal; }
+            set { SetProperty(ref _subTotal, value); }
+        }
+        public int TaxPrice
+        {
+            get { return _taxPrice; }
+            set { SetProperty(ref _taxPrice, value); }
+        }
         public int TotalAmount
         {
             get { return _totalAmount; }
             set { SetProperty(ref _totalAmount, value); }
-        }
-        public int IncludedTaxPrice
-        {
-            get { return _includedTaxPrice; }
-            set { SetProperty(ref _includedTaxPrice, value); }
         }
 
 
@@ -122,6 +130,7 @@ namespace katekero.ViewModels
             CancelCommand = new DelegateCommand(Cancel);
             CustomerSearchCommand = new DelegateCommand(CustomerSearch);
             ProductDoubleClickCommand = new DelegateCommand(ProductDoubleClick);
+            DeleteSaleCommand = new DelegateCommand<Sale>(DeleteSale);
 
             // Salesの初期化
             Sales = new ObservableCollection<Sale>();
@@ -143,8 +152,6 @@ namespace katekero.ViewModels
                 ProductCategories = new ObservableCollection<ProductCategory>(context.ProductCategories.ToList());
             }
 
-            TotalAmount = 1234;
-            IncludedTaxPrice = 123;
         }
 
         private void AddSaleDetail()
@@ -153,22 +160,34 @@ namespace katekero.ViewModels
             {
                 var product = context.Products.FirstOrDefault(p => p.Id == _selectedProductId);
 
-                var sale = new Sale
-                {
+                var existingSale = Sales.FirstOrDefault(s => s.ProductId == product.Id);
 
-                    State = 0,
-                    SaleNo = this.SaleNo,
-                    //LineNo = 1,
-                    CustomerId = this.CustomerId,
-                    CustomerName = this.CustomerName,
-                    ProductId = product.Id,
-                    ProductName = product.Name,
-                    Quantity = 1, // 初期数量を1とする
-                    Price = product.Price,
-                    Amount = product.Price // 初期数量が1なので価格と同じ
-                };
-                Sales.Add(sale);
-            }            
+                if (existingSale != null)
+                {
+                    existingSale.Quantity += 1;
+                    existingSale.Amount = existingSale.Quantity * product.Price;
+                }
+                else
+                {
+                    var sale = new Sale
+                    {
+                        State = 0,
+                        SaleNo = this.SaleNo,
+                        CustomerId = this.CustomerId,
+                        CustomerName = this.CustomerName,
+                        ProductId = product.Id,
+                        ProductName = product.Name,
+                        Quantity = 1,
+                        Price = product.Price,
+                        Amount = product.Price
+                    };
+                    Sales.Add(sale);
+                }
+            }
+
+            Subtotal = Sales.Sum(s => s.Amount);
+            TaxPrice = (int)(Subtotal * 0.1);
+            TotalAmount = Subtotal + TaxPrice;
         }
 
         private void Save()
@@ -249,6 +268,17 @@ namespace katekero.ViewModels
             _regionManager.RequestNavigate("ContentRegion", nameof(Dashboard), p);
         }
 
+        private void DeleteSale(Sale sale)
+        {
+            if (sale != null)
+            {
+                Sales.Remove(sale);
+
+                Subtotal = Sales.Sum(s => s.Amount);
+                TaxPrice = (int)(Subtotal * 0.1);
+                TotalAmount = Subtotal + TaxPrice;
+            }
+        }
         private void CustomerSearch()
         {
             // 得意先検索
