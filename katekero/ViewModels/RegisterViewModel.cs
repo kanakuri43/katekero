@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.ComponentModel;
 using System.Windows.Data;
+using System.Collections.Specialized;
 
 namespace katekero.ViewModels
 {
@@ -79,7 +80,16 @@ namespace katekero.ViewModels
         public ObservableCollection<Sale> Sales
         {
             get { return _sales; }
-            set { SetProperty(ref _sales, value); }
+            set
+            {
+                if (SetProperty(ref _sales, value))
+                {
+                    _sales.CollectionChanged += OnSalesCollectionChanged;
+                    RaisePropertyChanged(nameof(Subtotal));
+                    RaisePropertyChanged(nameof(TaxPrice));
+                    RaisePropertyChanged(nameof(TotalAmount));
+                }
+            }
         }
         public int SelectedProductCategoryId
         {
@@ -102,21 +112,12 @@ namespace katekero.ViewModels
             get { return _customerName; }
             set { SetProperty(ref _customerName, value); }
         }
-        public int Subtotal
-        {
-            get { return _subTotal; }
-            set { SetProperty(ref _subTotal, value); }
-        }
-        public int TaxPrice
-        {
-            get { return _taxPrice; }
-            set { SetProperty(ref _taxPrice, value); }
-        }
-        public int TotalAmount
-        {
-            get { return _totalAmount; }
-            set { SetProperty(ref _totalAmount, value); }
-        }
+        public int Subtotal => Sales.Sum(s => s.Amount);
+
+        public int TaxPrice => (int)(Subtotal * 0.1);
+
+        public int TotalAmount => Subtotal + TaxPrice;
+
         public string ProductSearchText
         {
             get { return _productSearchText; }
@@ -145,6 +146,7 @@ namespace katekero.ViewModels
 
             // Salesの初期化
             Sales = new ObservableCollection<Sale>();
+            Sales.CollectionChanged += OnSalesCollectionChanged;
 
             // 商品マスタ
             using (var context = new AppDbContext())
@@ -166,6 +168,13 @@ namespace katekero.ViewModels
                 ProductCategories = new ObservableCollection<ProductCategory>(context.ProductCategories.ToList());
             }
 
+        }
+
+        private void OnSalesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            RaisePropertyChanged(nameof(Subtotal));
+            RaisePropertyChanged(nameof(TaxPrice));
+            RaisePropertyChanged(nameof(TotalAmount));
         }
 
         private void FilterProducts()
@@ -194,6 +203,9 @@ namespace katekero.ViewModels
                 {
                     existingSale.Quantity += 1;
                     existingSale.Amount = existingSale.Quantity * product.Price;
+                    RaisePropertyChanged(nameof(Subtotal));
+                    RaisePropertyChanged(nameof(TaxPrice));
+                    RaisePropertyChanged(nameof(TotalAmount));
                 }
                 else
                 {
@@ -212,10 +224,6 @@ namespace katekero.ViewModels
                     Sales.Add(sale);
                 }
             }
-
-            Subtotal = Sales.Sum(s => s.Amount);
-            TaxPrice = (int)(Subtotal * 0.1);
-            TotalAmount = Subtotal + TaxPrice;
         }
 
         private void Save()
@@ -301,10 +309,6 @@ namespace katekero.ViewModels
             if (sale != null)
             {
                 Sales.Remove(sale);
-
-                Subtotal = Sales.Sum(s => s.Amount);
-                TaxPrice = (int)(Subtotal * 0.1);
-                TotalAmount = Subtotal + TaxPrice;
             }
         }
         private void CustomerSearch()

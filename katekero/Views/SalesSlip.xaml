@@ -95,14 +95,14 @@
                             </Style>
                         </GridViewColumn.HeaderContainerStyle>
                     </GridViewColumn>
-                    <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="300">
+                    <GridViewColumn Header="商品" DisplayMemberBinding="{Binding ProductName}" Width="300">
                         <GridViewColumn.HeaderContainerStyle>
                             <Style TargetType="GridViewColumnHeader">
                                 <Setter Property="Background" Value="LightGray"/>
                             </Style>
                         </GridViewColumn.HeaderContainerStyle>
                     </GridViewColumn>
-                    <GridViewColumn Header="Qty" Width="80">
+                    <GridViewColumn Header="数量" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Quantity, StringFormat=N0}" TextAlignment="Right"/>
@@ -114,7 +114,7 @@
                             </Style>
                         </GridViewColumn.HeaderContainerStyle>
                     </GridViewColumn>
-                    <GridViewColumn Header="Price" Width="100">
+                    <GridViewColumn Header="単価" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Price, StringFormat=N0}" TextAlignment="Right"/>
@@ -126,7 +126,7 @@
                             </Style>
                         </GridViewColumn.HeaderContainerStyle>
                     </GridViewColumn>
-                    <GridViewColumn Header="Amount" Width="100">
+                    <GridViewColumn Header="金額" Width="100">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Amount, StringFormat=N0}" TextAlignment="Right"/>
@@ -158,15 +158,15 @@
 
             <Border Grid.RowSpan="3"
                     Background="LightGray"/>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Subtotal"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="小計"/>
             <TextBlock Grid.Row="0" Grid.Column="1" 
                        Text="{Binding Subtotal, StringFormat=N0}"
                        HorizontalAlignment="Right"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Tax Price"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="消費税"/>
             <TextBlock Grid.Row="1" Grid.Column="1" 
                        Text="{Binding TaxPrice, StringFormat=N0}"
                        HorizontalAlignment="Right"/>
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Total Amount"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="合計"/>
             <TextBlock Grid.Row="2" Grid.Column="1" 
                        Text="{Binding TotalAmount, StringFormat=N0}"
                        HorizontalAlignment="Right"/>

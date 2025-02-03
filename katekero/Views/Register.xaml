@@ -123,8 +123,6 @@
                     <RowDefinition Height="100"/>
                     <!--detail-->
                     <RowDefinition Height="*"/>
-                    <!--memo-->
-                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
 
                 <!-- customer -->
@@ -192,8 +190,20 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="商品名" DisplayMemberBinding="{Binding ProductName}" Width="200"/>
-                            <GridViewColumn Header="価格" DisplayMemberBinding="{Binding Price}" Width="100"/>
-                            <GridViewColumn Header="数量" DisplayMemberBinding="{Binding Quantity}" Width="100"/>
+                            <GridViewColumn Header="価格" Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Price, StringFormat={}{0:#,0}}" HorizontalAlignment="Right" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="数量" Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Quantity, StringFormat={}{0:#,0}}" HorizontalAlignment="Right" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="削除" Width="44">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -223,10 +233,6 @@
                     </ListView.View>
 
                 </ListView>
-
-                <TextBox Grid.Row="4"
-                         Controls:TextBoxHelper.Watermark="伝票摘要" />
-
 
             </Grid>
 
@@ -273,13 +279,13 @@
                               SelectedValue="{Binding SelectedProductId}"
                               SelectedValuePath="Id">
                         <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
+                            <Style TargetType="ListViewItem" BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="NAME" Width="50" DisplayMemberBinding="{Binding Name}" />
+                                <GridViewColumn Header="NAME" Width="150" DisplayMemberBinding="{Binding Name}" />
                                 <GridViewColumn Header="Price" Width="80">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>

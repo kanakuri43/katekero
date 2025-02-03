@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace katekero.ViewModels
 {
@@ -18,11 +19,18 @@ namespace katekero.ViewModels
     {
         private readonly IRegionManager _regionManager;
         private ObservableCollection<Sale> _sales;
+        private ObservableCollection<Order> _orders;
         private int _selectedSaleNo;
         private DateTime _selectedDate;
         private string _json;
         private DateTime _lastFetchecAt;
+        private bool _isProgressRingActive;
 
+        public ObservableCollection<Order> Orders
+        {
+            get { return _orders; }
+            set { SetProperty(ref _orders, value); }
+        }
         public ObservableCollection<Sale> Sales
         {
             get { return _sales; }
@@ -48,10 +56,16 @@ namespace katekero.ViewModels
             get { return _lastFetchecAt; }
             set { SetProperty(ref _lastFetchecAt, value); }
         }
+        public bool IsProgressRingActive
+        {
+            get { return _isProgressRingActive; }
+            set { SetProperty(ref _isProgressRingActive, value); }
+        }
 
         public DashboardViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
+
             SaleDoubleClickCommand = new DelegateCommand(SaleDoubleClick);
             SelectedDateChangedCommand = new DelegateCommand(SelectedDateChanged);
             RegisterCommand = new DelegateCommand(Register);
@@ -64,6 +78,7 @@ namespace katekero.ViewModels
                 Sales = new ObservableCollection<Sale>(context.Sales.ToList());
             }
 
+            IsProgressRingActive = false; // ProgressRingを非表示
             SelectedDate = DateTime.Now;
             ShowSalesList();
 
@@ -101,24 +116,57 @@ namespace katekero.ViewModels
 
         private async Task FetchKintone(string[] args)
         {
-            HttpClient client = new HttpClient();
-            string apiToken = "ZQjrR6cwgLLBpt5NZQU4INEg8pAeWyE0AYdSWEHg"; // kintoneのAPIトークンを入力
+            try
+            {
+                IsProgressRingActive = true; // ProgressRingを表示
 
-            // ヘッダーにAPIトークンを設定
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Add("X-Cybozu-API-Token", apiToken);
+                HttpClient client = new HttpClient();
 
-            // レコード取得のURL
-            string url = $"https://vk5k755s9nir.cybozu.com/k/v1/records.json?app=140";
+                // kintoneのAPIトークン
+                string apiToken = "clYsh32YLyQryGcHH8t4F8hkyIhOuEL67YBuyuvU";
 
-            // レコードを取得
-            HttpResponseMessage response = await client.GetAsync(url);
+                // ヘッダーにAPIトークンを設定
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("X-Cybozu-API-Token", apiToken);
 
-            string responseBody = await response.Content.ReadAsStringAsync();
+                // レコード取得のURL
+                string url = $"https://vk5k755s9nir.cybozu.com/k/v1/records.json?app=203";
 
-            // Jsonプロパティにパースした結果を設定
-            Json = JObject.Parse(responseBody).ToString();
+                // レコードを取得
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                // Jsonプロパティにパースした結果を設定
+                //Json = JObject.Parse(responseBody).ToString();
+
+                // JSONデータをOrderオブジェクトに変換
+                var jsonObject = JObject.Parse(responseBody);
+                var records = jsonObject["records"].Select(record => new Order
+                {
+                    Id = int.Parse((string)record["$id"]["value"]),
+                    OrderNo = int.Parse((string)record["order_no"]["value"]),
+                    OrderDate = DateTime.Parse((string)record["order_date"]["value"]),
+                    CustomerCode = (string)record["customer_code"]["value"],
+                    CustomerName = (string)record["customer_name"]["value"],
+                    ProductCode = (string)record["product_code"]["value"],
+                    ProductName = (string)record["product_name"]["value"],
+                    Quantity = int.Parse((string)record["qty"]["value"]),
+                    Price = int.Parse((string)record["price"]["value"])
+                }).ToList();
+
+                Orders = new ObservableCollection<Order>(records);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                IsProgressRingActive = false; // ProgressRingを非表示
+            }
+
         }
 
 
