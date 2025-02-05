@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "katekero", "katekero\kateke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "invoice", "invoice\invoice.csproj", "{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "receipt", "receipt\receipt.csproj", "{CB9B7E86-AC50-4FD9-8ACB-7019E68475FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sale", "sale\sale.csproj", "{34E68EBA-517D-4081-82B5-23B71D3657DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB9B7E86-AC50-4FD9-8ACB-7019E68475FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB9B7E86-AC50-4FD9-8ACB-7019E68475FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB9B7E86-AC50-4FD9-8ACB-7019E68475FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB9B7E86-AC50-4FD9-8ACB-7019E68475FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34E68EBA-517D-4081-82B5-23B71D3657DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34E68EBA-517D-4081-82B5-23B71D3657DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34E68EBA-517D-4081-82B5-23B71D3657DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34E68EBA-517D-4081-82B5-23B71D3657DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
