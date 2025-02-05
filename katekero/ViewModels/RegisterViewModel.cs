@@ -112,6 +112,7 @@ namespace katekero.ViewModels
             get { return _customerName; }
             set { SetProperty(ref _customerName, value); }
         }
+
         public int Subtotal => Sales.Sum(s => s.Amount);
 
         public int TaxPrice => (int)(Subtotal * 0.1);
@@ -139,7 +140,7 @@ namespace katekero.ViewModels
             SaveCommand = new DelegateCommand(Save);
             DeleteCommand = new DelegateCommand(Delete);
             PrintCommand = new DelegateCommand(Print);
-            CancelCommand = new DelegateCommand(Cancel);
+            CancelCommand = new DelegateCommand(Home);
             CustomerSearchCommand = new DelegateCommand(CustomerSearch);
             ProductDoubleClickCommand = new DelegateCommand(ProductDoubleClick);
             DeleteSaleCommand = new DelegateCommand<Sale>(DeleteSale);
@@ -270,9 +271,7 @@ namespace katekero.ViewModels
                     context.SaveChanges();
                 }
             }
-            this.SaleNo = 0;
-            this.CustomerId = 0;
-            ShowDetails(0);
+
         }
 
         private void Print()
@@ -297,9 +296,10 @@ namespace katekero.ViewModels
                 printDialog.PrintVisual(salesSlipView, "Sales Slip");
             }
         }
-        private void Cancel()
+        private void Home()
         {
-            // Home
+            this.Sales.Clear();
+
             var p = new NavigationParameters();
             _regionManager.RequestNavigate("ContentRegion", nameof(Dashboard), p);
         }
@@ -313,10 +313,9 @@ namespace katekero.ViewModels
         }
         private void CustomerSearch()
         {
-            // 得意先検索
             var p = new NavigationParameters();
-            p.Add(nameof(CustomerSearchViewModel.SaleNo), this.SaleNo);
-            _regionManager.RequestNavigate("ContentRegion", nameof(Views.CustomerSearch), p);
+            p.Add(nameof(CustomerSearchViewModel.Sales), new ObservableCollection<Sale>(this.Sales));
+            _regionManager.RequestNavigate("ContentRegion", nameof(Views.CustomerSearch), p);       
 
         }
         private void ProductDoubleClick()
@@ -324,61 +323,34 @@ namespace katekero.ViewModels
             AddSaleDetail();
         }
 
-        private void ShowDetails(int SaleNo)
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            using var context = new AppDbContext();
-            var s = new ObservableCollection<Sale>(context.Sales
-                                                          .Where(j => j.SaleNo == SaleNo)
-                                                          .ToList());
-            this.Sales = s;
+            this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
+            this.CustomerName = navigationContext.Parameters.GetValue<string>(nameof(CustomerName));
 
-            if (SaleNo == 0)
+            var sales = navigationContext.Parameters.GetValue<ObservableCollection<Sale>>(nameof(Sales));
+            if (sales == null)
             {
-                if (this.CustomerId == 0)
-                {
-                    // 新規登録時
-
-                }
-                else
-                {
-                    // 新規登録時に得意先検索して、選んで戻ってきた
-                    // CustomerIdでCustomersを検索
-                    var customer = this.Customers.FirstOrDefault(c => c.Id == this.CustomerId);
-                    this.CustomerName = customer.Name;
-                }
+                this.SaleDate = DateTime.Now;
             }
             else
             {
-                if (this.CustomerId == 0)
+                this.Sales = sales;
+                if (sales.Any())
                 {
-                    //既存売上呼び出しで、得意先を選ばないで帰ってきた
-                    // SalesのCustomerNameを表示
-                    this.CustomerName = this.Sales.Select(sale => sale.CustomerName).FirstOrDefault();
-                }
-                else 
-                {
-                    // SalesのCustomerNameを表示
-                    this.CustomerName = this.Sales.Select(sale => sale.CustomerName).FirstOrDefault();
+                    var sale = sales.First();
+                    this.SaleNo = sale.SaleNo;
+                    this.SaleDate = sale.SaleDate;
+                    this.CustomerId = sale.CustomerId;
+                    this.CustomerName = sale.CustomerName;
                 }
             }
 
-            if (SaleNo == 0)
-            {
-                SaleDate = DateTime.Now;
-            }
-        }
-
-        public void OnNavigatedTo(NavigationContext navigationContext)
-        {
-
-            this.SaleNo = navigationContext.Parameters.GetValue<int>(nameof(SaleNo));
-            this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
-            ShowDetails(this.SaleNo);
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return false;
+            return true;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

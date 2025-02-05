@@ -93,7 +93,6 @@ namespace katekero.ViewModels
         private void Register()
         {
             var p = new NavigationParameters();
-            p.Add(nameof(RegisterViewModel.SaleNo), 0);
             _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
 
         }
@@ -169,14 +168,17 @@ namespace katekero.ViewModels
 
         }
 
-
         private void SaleDoubleClick()
         {
-            var p = new NavigationParameters();
-            p.Add(nameof(RegisterViewModel.SaleNo), _selectedSaleNo);
-            p.Add(nameof(RegisterViewModel.CustomerId), 0);
-            _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
+            var selectedSales = Sales.Where(s => s.SaleNo == SelectedSaleNo).ToList();
+            if (selectedSales.Any())
+            {
+                var p = new NavigationParameters();
+                p.Add(nameof(RegisterViewModel.Sales), new ObservableCollection<Sale>(selectedSales));
+                _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
+            }
         }
+
         private void SelectedDateChanged()
         {
             ShowSalesList();
@@ -204,7 +206,7 @@ namespace katekero.ViewModels
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            return false;
+            return true;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)

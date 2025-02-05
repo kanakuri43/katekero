@@ -13,10 +13,17 @@ namespace katekero.ViewModels
 	public class CustomerSearchViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
+
+        private ObservableCollection<Sale> _sales;
         private ObservableCollection<Customer> _customers;
         private int _saleNo;
         private int _customerId;
 
+        public ObservableCollection<Sale> Sales
+        {
+            get { return _sales; }
+            set { SetProperty(ref _sales, value); }
+        }
 
         public ObservableCollection<Customer> Customers
         {
@@ -37,7 +44,7 @@ namespace katekero.ViewModels
         public CustomerSearchViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
-            CancelCommand = new DelegateCommand(CancelCommandExecute);
+            CancelCommand = new DelegateCommand(Cancel);
             CustomerDoubleClickCommand = new DelegateCommand(CustomerDoubleClick);
 
             // 得意先マスタ
@@ -50,7 +57,7 @@ namespace katekero.ViewModels
 
         public DelegateCommand CustomerDoubleClickCommand { get; }
 
-        private void CancelCommandExecute()
+        private void Cancel()
         {
             var p = new NavigationParameters();
             p.Add(nameof(RegisterViewModel.SaleNo), this.SaleNo);
@@ -60,16 +67,20 @@ namespace katekero.ViewModels
         }
         private void CustomerDoubleClick()
         {
-            var p = new NavigationParameters();
-            p.Add(nameof(RegisterViewModel.SaleNo), this.SaleNo);
-            p.Add(nameof(RegisterViewModel.CustomerId), CustomerId);
-            _regionManager.RequestNavigate("ContentRegion", nameof(Register), p);
+            var selectedCustomer = Customers.FirstOrDefault(c => c.Id == CustomerId);
+            if (selectedCustomer != null)
+            {
+                var p = new NavigationParameters();
+                p.Add(nameof(RegisterViewModel.CustomerId), selectedCustomer.Id);
+                p.Add(nameof(RegisterViewModel.CustomerName), selectedCustomer.Name);
+                _regionManager.RequestNavigate("ContentRegion", nameof(Register), p);
+            }
 
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            this.SaleNo = navigationContext.Parameters.GetValue<int>(nameof(SaleNo));
+            this.Sales = navigationContext.Parameters.GetValue<ObservableCollection<Sale>>(nameof(Sales));
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
