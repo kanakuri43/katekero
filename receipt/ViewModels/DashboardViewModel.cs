@@ -65,19 +65,19 @@ namespace receipt.ViewModels
         private void Forward()
         {
             this.SelectedDate = this.SelectedDate.AddDays(1);
-            ShowSalesList();
+            ShowReceiptsList();
         }
         private void Backward()
         {
             this.SelectedDate = this.SelectedDate.AddDays(-1);
-            ShowSalesList();
+            ShowReceiptsList();
         }
         private void SelectedDateChanged()
         {
-            ShowSalesList();
+            ShowReceiptsList();
         }
 
-        private void ShowSalesList()
+        private void ShowReceiptsList()
         {
             using var context = new AppDbContext();
 
@@ -104,7 +104,7 @@ namespace receipt.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             SelectedDate = DateTime.Now;
-            ShowSalesList();
+            ShowReceiptsList();
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)

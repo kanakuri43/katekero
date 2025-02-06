@@ -8,6 +8,9 @@
     <Compile Include="..\katekero\Models\Customers.cs" Link="Models\Customers.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\katekero\config.xml" Link="config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\katekero\katekero_icon.ico" Link="katekero_icon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

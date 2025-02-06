@@ -13,6 +13,7 @@ namespace receipt.Models
     {
         public DbSet<katekero.Models.Customer> Customers { get; set; }
         public DbSet<Receipt> Receipts { get; set; }
+        public DbSet<Account> Accounts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
