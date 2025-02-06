@@ -16,7 +16,7 @@ namespace receipt
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.RegisterForNavigation<Dashboard>();
         }
     }
 }

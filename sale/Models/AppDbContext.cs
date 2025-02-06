@@ -14,7 +14,7 @@ namespace sale.Models
         public DbSet<Sale> Sales { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<katekero.Models.Customer> Customers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

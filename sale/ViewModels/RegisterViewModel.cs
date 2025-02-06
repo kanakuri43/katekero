@@ -23,7 +23,7 @@ namespace sale.ViewModels
         private DateTime _saleDate;
         private int _saleId;
         private int _saleNo;
-        private ObservableCollection<Customer> _customers;
+        private ObservableCollection<katekero.Models.Customer> _customers;
         private ObservableCollection<Product> _products;
         private ObservableCollection<ProductCategory> _productCategories;
         private ObservableCollection<Sale> _sales;
@@ -62,7 +62,7 @@ namespace sale.ViewModels
             get { return _saleNo; }
             set { SetProperty(ref _saleNo, value); }
         }
-        public ObservableCollection<Customer> Customers
+        public ObservableCollection<katekero.Models.Customer> Customers
         {
             get { return _customers; }
             set { SetProperty(ref _customers, value); }
@@ -160,7 +160,7 @@ namespace sale.ViewModels
             // 得意先マスタ
             using (var context = new AppDbContext())
             {
-                Customers = new ObservableCollection<Customer>(context.Customers.ToList());
+                Customers = new ObservableCollection<katekero.Models.Customer>(context.Customers.ToList());
             }
 
             //商品分類マスタ

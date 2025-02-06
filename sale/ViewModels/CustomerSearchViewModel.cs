@@ -15,7 +15,7 @@ namespace sale.ViewModels
         private readonly IRegionManager _regionManager;
 
         private ObservableCollection<Sale> _sales;
-        private ObservableCollection<Customer> _customers;
+        private ObservableCollection<katekero.Models.Customer> _customers;
         private int _saleNo;
         private int _customerId;
 
@@ -25,7 +25,7 @@ namespace sale.ViewModels
             set { SetProperty(ref _sales, value); }
         }
 
-        public ObservableCollection<Customer> Customers
+        public ObservableCollection<katekero.Models.Customer> Customers
         {
             get { return _customers; }
             set { SetProperty(ref _customers, value); }
@@ -50,7 +50,7 @@ namespace sale.ViewModels
             // 得意先マスタ
             using (var context = new AppDbContext())
             {
-                Customers = new ObservableCollection<Customer>(context.Customers.ToList());
+                Customers = new ObservableCollection<katekero.Models.Customer>(context.Customers.ToList());
             }
         }
         public DelegateCommand CancelCommand { get; }

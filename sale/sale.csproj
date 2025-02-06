@@ -5,6 +5,9 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\katekero\Models\Customers.cs" Link="Models\Customers.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="..\katekero\config.xml" Link="config.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -1,18 +1,23 @@
 ﻿using Prism.Mvvm;
+using Prism.Regions;
+using receipt.Views;
 
 namespace receipt.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private string _title = "Prism Application";
+        private readonly IRegionManager _regionManager;
+        private string _title = "KATEKERO";
         public string Title
         {
             get { return _title; }
             set { SetProperty(ref _title, value); }
         }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IRegionManager regionManager)
         {
+            _regionManager = regionManager;
+            _regionManager.RegisterViewWithRegion("ContentRegion", typeof(Dashboard));
 
         }
     }
