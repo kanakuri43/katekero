@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace receipt.Models
 {
     [Table("receipts")]
-    public class receipt : INotifyPropertyChanged
+    public class Receipt : INotifyPropertyChanged
     {
         public int Id { get; set; }
 
@@ -21,6 +21,9 @@ namespace receipt.Models
 
         [Column("receipt_no")]
         public int ReceiptNo { get; set; }
+
+        [Column("line_no")]
+        public int LineNo { get; set; }
 
         [Column("customer_id")]
         public int CustomerId { get; set; }

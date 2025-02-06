@@ -8,6 +8,11 @@
     <Compile Include="..\katekero\Models\Customers.cs" Link="Models\Customers.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\katekero\katekero_icon.ico" Link="katekero_icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.4.10" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="5.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.1" />

@@ -8,190 +8,177 @@
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid Margin="10" Background="White">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="200"/>
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="40"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
 
-            <Grid Grid.Column="0">
-                <TabControl >
-                    <TabItem Header="受注">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="50"/>
-                                <RowDefinition Height="20"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+        <Grid Grid.Column="0">
+            <TabControl >
+                <TabItem Header="受注">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-                            <StackPanel Grid.Row="0"
-                                        Orientation="Horizontal"
-                                        Margin="0,20,0,0">
-                                <Button Grid.Row="0" Grid.Column="0"
-                                        Command="{Binding ReloadCommand}"
-                                        Width="30">
-                                    <iconPacks:PackIconMaterial Kind="Reload"/>
-                                </Button>
-                                <TextBox Grid.Row="0" 
-                                         Width="200"
-                                         Margin="20,0,0,0"
-                                         Controls:TextBoxHelper.Watermark="得意先検索"/>
+                        <StackPanel Grid.Row="0"
+                                    Orientation="Horizontal"
+                                    Margin="0,20,0,0">
+                            <Button Grid.Row="0" Grid.Column="0"
+                                    Command="{Binding ReloadCommand}"
+                                    Width="30">
+                                <iconPacks:PackIconMaterial Kind="Reload"/>
+                            </Button>
+                            <TextBox Grid.Row="0" 
+                                        Width="200"
+                                        Margin="20,0,0,0"
+                                        Controls:TextBoxHelper.Watermark="得意先検索"/>
 
-                            </StackPanel>
-                            <ScrollViewer Grid.Row="2"
-                                          VerticalScrollBarVisibility="Auto">
-                                <ListView Grid.Row="2" 
-                                      ItemsSource="{Binding Orders}"
-                                      SelectedValuePath="SaleNo"
-                                      SelectedValue="{Binding SelectedOrderNo}" >
+                        </StackPanel>
+                        <ListView Grid.Row="2" 
+                                    ItemsSource="{Binding Orders}"
+                                    SelectedValuePath="SaleNo"
+                                    SelectedValue="{Binding SelectedOrderNo}" >
 
-                                    <ListView.View>
-                                        <GridView>
-                                            <GridViewColumn Header="Date" DisplayMemberBinding="{Binding OrderDate, StringFormat='yyyy/MM/dd'}" Width="80"/>
-                                            <GridViewColumn Header="O#" DisplayMemberBinding="{Binding OrderNo}" Width="60"/>
-                                            <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="160"/>
-                                            <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
-                                            <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
-                                            <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="50"/>
-                                        </GridView>
-                                    </ListView.View>
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="MouseDoubleClick">
-                                            <prism:InvokeCommandAction Command="{Binding SaleDoubleClickCommand}"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </ListView>
-
-                            </ScrollViewer>
-                            <mah:ProgressRing Grid.Row="2"
-						                      IsActive="{Binding IsProgressRingActive}" 
-                                              Width="50" Height="50" 
-                                              HorizontalAlignment="Center" 
-                                              VerticalAlignment="Center" 
-                                              Panel.ZIndex="100" />
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding OrderDate, StringFormat='yyyy/MM/dd'}" Width="80"/>
+                                    <GridViewColumn Header="O#" DisplayMemberBinding="{Binding OrderNo}" Width="60"/>
+                                    <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="160"/>
+                                    <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
+                                    <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
+                                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="50"/>
+                                </GridView>
+                            </ListView.View>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <prism:InvokeCommandAction Command="{Binding SaleDoubleClickCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListView>
+                        <mah:ProgressRing Grid.Row="2"
+						                    IsActive="{Binding IsProgressRingActive}" 
+                                            Width="50" Height="50" 
+                                            HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center" 
+                                            Panel.ZIndex="100" />
 
 
 
-                        </Grid>
+                    </Grid>
 
-                    </TabItem>
-                    <TabItem Header="売上">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="50"/>
-                                <RowDefinition Height="20"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0" 
-                                        Orientation="Horizontal"
-                                        Margin="0,20,0,0">
-                                <Button Command="{Binding BackwardCommand}">
-                                    <iconPacks:PackIconEntypo Kind="ChevronSmallLeft" Foreground="#FF388934"/>
-                                </Button>
+                </TabItem>
+                <TabItem Header="売上">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" 
+                                    Orientation="Horizontal"
+                                    Margin="0,20,0,0">
+                            <Button Command="{Binding BackwardCommand}">
+                                <iconPacks:PackIconEntypo Kind="ChevronSmallLeft" Foreground="#FF388934"/>
+                            </Button>
 
-                                <DatePicker Width="100"
-                                SelectedDate="{Binding SelectedDate}"
-                                HorizontalAlignment="Left">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="SelectedDateChanged">
-                                            <prism:InvokeCommandAction 
-                                Command="{Binding SelectedDateChangedCommand}" 
-                                TriggerParameterPath="AddedItems"/>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </DatePicker>
-                                <Button Command="{Binding ForwardCommand}">
-                                    <iconPacks:PackIconEntypo Kind="ChevronSmallRight" Foreground="#FF388934"/>
-                                </Button>
-
-                                <TextBox Grid.Row="0" 
-                                         Width="200"
-                                         Margin="20,0,0,0"
-                                         Controls:TextBoxHelper.Watermark="得意先検索"/>
-
-                            </StackPanel>
-
-                            <ListView Grid.Row="2" 
-                                      ItemsSource="{Binding Sales}"
-                                      SelectedValuePath="SaleNo"
-                                      SelectedValue="{Binding SelectedSaleNo}" >
-
-                                <ListView.View>
-                                    <GridView>
-                                        <GridViewColumn Header="S#" DisplayMemberBinding="{Binding SaleNo}" Width="60"/>
-                                        <GridViewColumn Header="L#" DisplayMemberBinding="{Binding LineNo}" Width="60"/>
-                                        <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="160"/>
-                                        <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
-                                        <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
-                                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="50"/>
-                                    </GridView>
-                                </ListView.View>
+                            <DatePicker Width="100"
+                            SelectedDate="{Binding SelectedDate}"
+                            HorizontalAlignment="Left">
                                 <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDoubleClick">
-                                        <prism:InvokeCommandAction Command="{Binding SaleDoubleClickCommand}"/>
+                                    <i:EventTrigger EventName="SelectedDateChanged">
+                                        <prism:InvokeCommandAction 
+                            Command="{Binding SelectedDateChangedCommand}" 
+                            TriggerParameterPath="AddedItems"/>
                                     </i:EventTrigger>
                                 </i:Interaction.Triggers>
-                            </ListView>
+                            </DatePicker>
+                            <Button Command="{Binding ForwardCommand}">
+                                <iconPacks:PackIconEntypo Kind="ChevronSmallRight" Foreground="#FF388934"/>
+                            </Button>
 
-                        </Grid>
+                            <TextBox Grid.Row="0" 
+                                        Width="200"
+                                        Margin="20,0,0,0"
+                                        Controls:TextBoxHelper.Watermark="得意先検索"/>
 
-                    </TabItem>
-                </TabControl>
-            </Grid>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="50"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="64"/>
-                </Grid.RowDefinitions>
-                <Button Grid.Row="0" Grid.Column="1"
-                        Margin="2"
-                        Command="{Binding RegisterCommand}">
-                    <StackPanel Orientation="Horizontal">
-                        <Rectangle Width="16" Height="16">
-                            <Rectangle.Fill>
-                                <DrawingBrush>
-                                    <DrawingBrush.Drawing>
-                                        <DrawingGroup>
-                                            <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
-                                            <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M6.0003,-0.000199999999999534L6.0003,5.9998 0.000300000000000189,5.9998 0.000300000000000189,9.9998 6.0003,9.9998 6.0003,15.9998 10.0003,15.9998 10.0003,9.9998 16.0003,9.9998 16.0003,5.9998 10.0003,5.9998 10.0003,-0.000199999999999534z" />
-                                            <GeometryDrawing Brush="#FF388934" Geometry="F1M15,9L9,9 9,15 7,15 7,9 1,9 1,7 7,7 7,1 9,1 9,7 15,7z" />
-                                        </DrawingGroup>
-                                    </DrawingBrush.Drawing>
-                                </DrawingBrush>
-                            </Rectangle.Fill>
-                        </Rectangle>
-                        <TextBlock Text="売上登録"
-                               FontSize="12"
-                               Margin="4"/>
+                        </StackPanel>
 
-                    </StackPanel>
+                        <ListView Grid.Row="2" 
+                                    ItemsSource="{Binding Sales}"
+                                    SelectedValuePath="SaleNo"
+                                    SelectedValue="{Binding SelectedSaleNo}" >
 
-                </Button>
-                <Button Grid.Row="1" Grid.Column="1"
-                        Margin="2">
-                </Button>
-                <Button Grid.Row="2" Grid.Column="1"
-                        Margin="2">
-                </Button>
-                <Button Grid.Row="3" Grid.Column="1"
-                        Margin="2">
-                </Button>
-                <Button Grid.Row="4" Grid.Column="1"
-                        Margin="2">
-                </Button>
-                <Image Grid.Row="7" 
-                       Source="{StaticResource IconImage}"
-                       Stretch="Uniform"
-                       Width="64" Height="64" />
-            </Grid>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="S#" DisplayMemberBinding="{Binding SaleNo}" Width="60"/>
+                                    <GridViewColumn Header="L#" DisplayMemberBinding="{Binding LineNo}" Width="60"/>
+                                    <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="160"/>
+                                    <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
+                                    <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
+                                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="50"/>
+                                </GridView>
+                            </ListView.View>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="MouseDoubleClick">
+                                    <prism:InvokeCommandAction Command="{Binding SaleDoubleClickCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </ListView>
+
+                    </Grid>
+
+                </TabItem>
+            </TabControl>
         </Grid>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="64"/>
+            </Grid.RowDefinitions>
+            <Button Grid.Row="0" Grid.Column="1"
+                    Margin="2"
+                    Command="{Binding RegisterCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="16" Height="16">
+                        <Rectangle.Fill>
+                            <DrawingBrush>
+                                <DrawingBrush.Drawing>
+                                    <DrawingGroup>
+                                        <GeometryDrawing Brush="#00FFFFFF" Geometry="F1M16,16L0,16 0,0 16,0z" />
+                                        <GeometryDrawing Brush="#FFF6F6F6" Geometry="F1M6.0003,-0.000199999999999534L6.0003,5.9998 0.000300000000000189,5.9998 0.000300000000000189,9.9998 6.0003,9.9998 6.0003,15.9998 10.0003,15.9998 10.0003,9.9998 16.0003,9.9998 16.0003,5.9998 10.0003,5.9998 10.0003,-0.000199999999999534z" />
+                                        <GeometryDrawing Brush="#FF388934" Geometry="F1M15,9L9,9 9,15 7,15 7,9 1,9 1,7 7,7 7,1 9,1 9,7 15,7z" />
+                                    </DrawingGroup>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Rectangle.Fill>
+                    </Rectangle>
+                    <TextBlock Text="売上登録"
+                            FontSize="12"
+                            Margin="4"/>
 
+                </StackPanel>
+
+            </Button>
+            <Button Grid.Row="1" Grid.Column="1"
+                    Margin="2">
+            </Button>
+
+
+            <Image Grid.Row="7" 
+                    Source="{StaticResource IconImage}"
+                    Stretch="Uniform"
+                    Width="64" Height="64" />
+        </Grid>
     </Grid>
+
 </UserControl>

@@ -12,6 +12,7 @@ namespace receipt.Models
     public class AppDbContext : DbContext
     {
         public DbSet<katekero.Models.Customer> Customers { get; set; }
+        public DbSet<Receipt> Receipts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
