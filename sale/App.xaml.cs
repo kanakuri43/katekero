@@ -1,5 +1,5 @@
-﻿using Prism.Ioc;
-using sale.Views;
+﻿using sale.Views;
+using Prism.Ioc;
 using System.Windows;
 
 namespace sale
@@ -16,7 +16,9 @@ namespace sale
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.RegisterForNavigation<Dashboard>();
+            containerRegistry.RegisterForNavigation<Register>();
+            containerRegistry.RegisterForNavigation<CustomerSearch>();
         }
     }
 }
