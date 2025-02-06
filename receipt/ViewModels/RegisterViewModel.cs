@@ -21,8 +21,6 @@ namespace receipt.ViewModels
         private int _receiptNo;
         private int _totalReceiptAmount;
         private ObservableCollection<Account> _accounts;
-        private string _accountSearchText;
-        private ICollectionView _filteredAccounts;
         private int _customerId;
         private string _customerName;
         private int _selectedAccountId;
@@ -66,19 +64,7 @@ namespace receipt.ViewModels
                 }
             }
         }
-        public string AccountSearchText
-        {
-            get { return _accountSearchText; }
-            set
-            {
-                SetProperty(ref _accountSearchText, value);
-                FilterAccounts();
-            }
-        }
-        public ICollectionView FilteredAccounts
-        {
-            get { return _filteredAccounts; }
-        }
+
         public int CustomerId
         {
             get { return _customerId; }
@@ -113,8 +99,6 @@ namespace receipt.ViewModels
             {
                 Accounts = new ObservableCollection<Account>(context.Accounts.ToList());
             }
-            //_filteredAccounts = CollectionViewSource.GetDefaultView(Accounts);
-            //_filteredAccounts.Filter = FilterAccountByName;
 
         }
 
@@ -124,18 +108,6 @@ namespace receipt.ViewModels
             RaisePropertyChanged(nameof(TotalReceiptAmount));
         }
 
-        private bool FilterAccountByName(object item)
-        {
-            if (item is Account account)
-            {
-                return string.IsNullOrEmpty(AccountSearchText) || account.Name.Contains(AccountSearchText, StringComparison.OrdinalIgnoreCase);
-            }
-            return false;
-        }
-        private void FilterAccounts()
-        {
-            _filteredAccounts.Refresh();
-        }
 
         private void AddReceiptDetail()
         {
