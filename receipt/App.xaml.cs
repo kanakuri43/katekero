@@ -18,6 +18,7 @@ namespace receipt
         {
             containerRegistry.RegisterForNavigation<Dashboard>();
             containerRegistry.RegisterForNavigation<Register>();
+            containerRegistry.RegisterForNavigation<CustomerSearch>();
         }
     }
 }

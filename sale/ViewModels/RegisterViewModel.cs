@@ -283,7 +283,7 @@ namespace sale.ViewModels
                 var salesSlipView = new Views.SalesSlip();
                 var salesSlipViewModel = new SalesSlipViewModel(new ObservableCollection<Sale>(this.Sales));
 
-                // ここでTitleを設定
+                // Titleを設定
                 salesSlipViewModel.SetTitle("納品書"); 
 
                 salesSlipView.DataContext = salesSlipViewModel;
@@ -325,16 +325,16 @@ namespace sale.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
-            this.CustomerName = navigationContext.Parameters.GetValue<string>(nameof(CustomerName));
 
             var sales = navigationContext.Parameters.GetValue<ObservableCollection<Sale>>(nameof(Sales));
             if (sales == null)
             {
                 // 新期
 
-                this.SaleDate = DateTime.Now;
                 this.SaleNo = 0;
+                this.SaleDate = DateTime.Now;
+                this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
+                this.CustomerName = navigationContext.Parameters.GetValue<string>(nameof(CustomerName));
 
                 this.CanHeaderEdit = true;  // 日付・得意先 変更可
             }
@@ -348,7 +348,6 @@ namespace sale.ViewModels
                     var sale = sales.First();
                     this.SaleNo = sale.SaleNo;
                     this.SaleDate = sale.SaleDate;
-
                     this.CustomerId = sale.CustomerId;
                     this.CustomerName = sale.CustomerName;
 

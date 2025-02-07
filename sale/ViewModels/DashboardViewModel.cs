@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Timers;
 
 namespace sale.ViewModels
 {
@@ -21,10 +22,12 @@ namespace sale.ViewModels
         private ObservableCollection<Sale> _sales;
         private ObservableCollection<Order> _orders;
         private int _selectedSaleNo;
+        private int _selectedOrderNo;
         private DateTime _selectedDate;
         private string _json;
-        private DateTime _lastFetchecAt;
+        private DateTime _lastFetchedAt;
         private bool _isProgressRingActive;
+        private readonly Timer _timer;
 
         public ObservableCollection<Order> Orders
         {
@@ -41,6 +44,11 @@ namespace sale.ViewModels
             get { return _selectedSaleNo; }
             set { SetProperty(ref _selectedSaleNo, value); }
         }
+        public int SelectedOrderNo
+        {
+            get { return _selectedOrderNo; }
+            set { SetProperty(ref _selectedOrderNo, value); }
+        }
         public DateTime SelectedDate
         {
             get { return _selectedDate; }
@@ -53,8 +61,8 @@ namespace sale.ViewModels
         }
         public DateTime LastFetchedAt
         {
-            get { return _lastFetchecAt; }
-            set { SetProperty(ref _lastFetchecAt, value); }
+            get { return _lastFetchedAt; }
+            set { SetProperty(ref _lastFetchedAt, value); }
         }
         public bool IsProgressRingActive
         {
@@ -67,28 +75,36 @@ namespace sale.ViewModels
             _regionManager = regionManager;
 
             SaleDoubleClickCommand = new DelegateCommand(SaleDoubleClick);
+            OrderDoubleClickCommand = new DelegateCommand(OrderDoubleClick);
             SelectedDateChangedCommand = new DelegateCommand(SelectedDateChanged);
             RegisterCommand = new DelegateCommand(Register);
             ForwardCommand = new DelegateCommand(Forward);
             BackwardCommand = new DelegateCommand(Backward);
-            ReloadCommand = new DelegateCommand(Reload);
+            ManualReloadCommand = new DelegateCommand(ManualReload);
 
             using (var context = new AppDbContext())
             {
                 Sales = new ObservableCollection<Sale>(context.Sales.ToList());
             }
 
-            IsProgressRingActive = false; // ProgressRingを非表示
+            ManualReload();
+            // Timerの設定
+            _timer = new Timer(60000); // 1分ごとに実行
+            _timer.Elapsed += (sender, e) => ManualReload();
+            _timer.Start();
+
+            IsProgressRingActive = false;
             SelectedDate = DateTime.Now;
             ShowSalesList();
 
         }
         public DelegateCommand RegisterCommand { get; }
         public DelegateCommand SaleDoubleClickCommand { get; }
+        public DelegateCommand OrderDoubleClickCommand { get; }
         public DelegateCommand SelectedDateChangedCommand { get; }
         public DelegateCommand ForwardCommand { get; }
         public DelegateCommand BackwardCommand { get; }
-        public DelegateCommand ReloadCommand { get; }
+        public DelegateCommand ManualReloadCommand { get; }
 
         private void Register()
         {
@@ -106,7 +122,7 @@ namespace sale.ViewModels
             this.SelectedDate = this.SelectedDate.AddDays(-1);
             ShowSalesList();
         }
-        private async void Reload()
+        private async void ManualReload()
         {
             await FetchKintone(new string[] { });
 
@@ -117,7 +133,7 @@ namespace sale.ViewModels
         {
             try
             {
-                IsProgressRingActive = true; // ProgressRingを表示
+                IsProgressRingActive = true; 
 
                 HttpClient client = new HttpClient();
 
@@ -136,9 +152,6 @@ namespace sale.ViewModels
                 HttpResponseMessage response = await client.GetAsync(url);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
-
-                // Jsonプロパティにパースした結果を設定
-                //Json = JObject.Parse(responseBody).ToString();
 
                 // JSONデータをOrderオブジェクトに変換
                 var jsonObject = JObject.Parse(responseBody);
@@ -163,7 +176,7 @@ namespace sale.ViewModels
             }
             finally
             {
-                IsProgressRingActive = false; // ProgressRingを非表示
+                IsProgressRingActive = false; 
             }
 
         }
@@ -175,6 +188,30 @@ namespace sale.ViewModels
             {
                 var p = new NavigationParameters();
                 p.Add(nameof(RegisterViewModel.Sales), new ObservableCollection<Sale>(selectedSales));
+                _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
+            }
+        }
+
+        private void OrderDoubleClick()
+        {
+            var selectedOrder = Orders.FirstOrDefault(o => o.OrderNo == SelectedOrderNo);
+            if (selectedOrder != null)
+            {
+                var sale = new Sale
+                {
+                    SaleNo = 0, 
+                    SaleDate = DateTime.Now,
+                    CustomerId = 0, // 必要に応じて設定
+                    CustomerName = selectedOrder.CustomerName,
+                    ProductId = 0, // 必要に応じて設定
+                    ProductName = selectedOrder.ProductName,
+                    Quantity = selectedOrder.Quantity,
+                    Price = selectedOrder.Price,
+                    Amount = selectedOrder.Quantity * selectedOrder.Price
+                };
+
+                var p = new NavigationParameters();
+                p.Add(nameof(RegisterViewModel.Sales), new ObservableCollection<Sale> { sale });
                 _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
             }
         }

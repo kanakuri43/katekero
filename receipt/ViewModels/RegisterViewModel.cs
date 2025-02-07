@@ -100,6 +100,7 @@ namespace receipt.ViewModels
             DeleteCommand = new DelegateCommand(Delete);
             CancelCommand = new DelegateCommand(Home);
             AccountDoubleClickCommand = new DelegateCommand(AccountDoubleClick);
+            CustomerSearchCommand = new DelegateCommand(CustomerSearch);
 
             // Receiptsの初期化
             Receipts = new ObservableCollection<Receipt>();
@@ -109,22 +110,6 @@ namespace receipt.ViewModels
             using (var context = new AppDbContext())
             {
                 Accounts = new ObservableCollection<Account>(context.Accounts.ToList());
-
-                // Receiptsに追加
-                foreach (var account in Accounts)
-                {
-                    var receipt = new Receipt
-                    {
-                        State = 0,
-                        ReceiptNo = this.ReceiptNo,
-                        CustomerId = this.CustomerId,
-                        CustomerName = this.CustomerName,
-                        AccountId = account.Id,
-                        AccountName = account.Name,
-                        ReceiptAmount = 0
-                    };
-                    Receipts.Add(receipt);
-                }
             }
 
         }
@@ -218,9 +203,20 @@ namespace receipt.ViewModels
             _regionManager.RequestNavigate("ContentRegion", nameof(Dashboard), p);
         }
 
+        private void CustomerSearch()
+        {
+            var p = new NavigationParameters();
+            p.Add(nameof(CustomerSearchViewModel.Sales), new ObservableCollection<Receipt>(this.Receipts));
+            _regionManager.RequestNavigate("ContentRegion", nameof(Views.CustomerSearch), p);
+
+        }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
+            this.CustomerName = navigationContext.Parameters.GetValue<string>(nameof(CustomerName));
+
+            this.ReceiptDate = DateTime.Now;
 
         }
 
