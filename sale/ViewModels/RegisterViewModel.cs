@@ -1,15 +1,10 @@
 ﻿using sale.Models;
 using sale.Views;
-using Microsoft.Identity.Client;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO.Packaging;
-using System.IO;
 using System.Linq;
 using System.ComponentModel;
 using System.Windows.Data;
@@ -37,6 +32,7 @@ namespace sale.ViewModels
         private int _totalAmount;
         private string _productSearchText;
         private ICollectionView _filteredProducts;
+        private bool _canHeaderEdit;
 
         public DelegateCommand SaveCommand { get; }
         public DelegateCommand DeleteCommand { get; }
@@ -112,7 +108,11 @@ namespace sale.ViewModels
             get { return _customerName; }
             set { SetProperty(ref _customerName, value); }
         }
-
+        public bool CanHeaderEdit
+        {
+            get { return _canHeaderEdit; }
+            set { SetProperty(ref _canHeaderEdit, value); }
+        }
         public int Subtotal => Sales.Sum(s => s.Amount);
 
         public int TaxPrice => (int)(Subtotal * 0.1);
@@ -331,19 +331,30 @@ namespace sale.ViewModels
             var sales = navigationContext.Parameters.GetValue<ObservableCollection<Sale>>(nameof(Sales));
             if (sales == null)
             {
+                // 新期
+
                 this.SaleDate = DateTime.Now;
+                this.SaleNo = 0;
+
+                this.CanHeaderEdit = true;  // 日付・得意先 変更可
             }
             else
             {
+                // 編集
+
                 this.Sales = sales;
                 if (sales.Any())
                 {
                     var sale = sales.First();
                     this.SaleNo = sale.SaleNo;
                     this.SaleDate = sale.SaleDate;
+
                     this.CustomerId = sale.CustomerId;
                     this.CustomerName = sale.CustomerName;
+
                 }
+
+                this.CanHeaderEdit = false; // 日付・得意先 変更不可
             }
 
         }

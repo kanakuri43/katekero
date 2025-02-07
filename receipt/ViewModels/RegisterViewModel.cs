@@ -3,24 +3,25 @@ using receipt.Views;
 using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
-using receipt.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
-using System.Windows.Data;
 using System.ComponentModel;
+using System.Windows.Data;
+using System.Collections.Specialized;
 
 namespace receipt.ViewModels
 {
     public class RegisterViewModel : BindableBase, INavigationAware
     {
         private readonly IRegionManager _regionManager;
-        private ObservableCollection<Receipt> _receipts;
+        private DateTime _receiptDate;
+        private int _receiptId;
         private int _receiptNo;
-        private int _totalReceiptAmount;
+        private ObservableCollection<Receipt> _receipts;
+        private ObservableCollection<katekero.Models.Customer> _customers;
         private ObservableCollection<Account> _accounts;
+        private int _totalReceiptAmount;
         private int _customerId;
         private string _customerName;
         private int _selectedAccountId;
@@ -31,6 +32,16 @@ namespace receipt.ViewModels
         public DelegateCommand CustomerSearchCommand { get; }
         public DelegateCommand AccountDoubleClickCommand { get; }
 
+        public DateTime ReceiptDate
+        {
+            get { return _receiptDate; }
+            set { SetProperty(ref _receiptDate, value); }
+        }
+        public int ReceiptId
+        {
+            get { return _receiptId; }
+            set { SetProperty(ref _receiptId, value); }
+        }
         public int ReceiptNo
         {
             get { return _receiptNo; }
@@ -98,6 +109,22 @@ namespace receipt.ViewModels
             using (var context = new AppDbContext())
             {
                 Accounts = new ObservableCollection<Account>(context.Accounts.ToList());
+
+                // Receiptsに追加
+                foreach (var account in Accounts)
+                {
+                    var receipt = new Receipt
+                    {
+                        State = 0,
+                        ReceiptNo = this.ReceiptNo,
+                        CustomerId = this.CustomerId,
+                        CustomerName = this.CustomerName,
+                        AccountId = account.Id,
+                        AccountName = account.Name,
+                        ReceiptAmount = 0
+                    };
+                    Receipts.Add(receipt);
+                }
             }
 
         }
@@ -145,6 +172,35 @@ namespace receipt.ViewModels
         }
         private void Save()
         {
+            using (var context = new AppDbContext())
+            {
+                var dt = DateTime.Now;
+                if (this.ReceiptNo == 0)
+                {
+                    // 売上番号設定
+                    int maxSaleNo = context.Receipts.Max(s => (int?)s.ReceiptNo) ?? 0;
+                    int newSaleNo = maxSaleNo + 1;
+
+                    var lineNo = 0;
+                    foreach (var r in _receipts)
+                    {
+                        lineNo++;
+
+                        r.ReceiptDate = this.ReceiptDate;
+                        r.ReceiptNo = newSaleNo;
+                        r.LineNo = lineNo;
+                        r.CreatedAt = dt;
+                        r.UpdatedAt = dt;
+                        context.Receipts.Add(r);
+                    }
+                }
+                else
+                {
+
+                }
+
+                context.SaveChanges();
+            }
 
         }
         private void Delete()

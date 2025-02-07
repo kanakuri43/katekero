@@ -96,6 +96,7 @@
             <StackPanel Grid.Column="5" 
                         Orientation="Vertical">
                 <DatePicker Grid.Column="4"
+                            IsEnabled ="{Binding CanHeaderEdit}"
                             SelectedDate="{Binding SaleDate}"/>
 
             </StackPanel>
@@ -136,6 +137,7 @@
                                Background="WhiteSmoke"
                                Text="{Binding CustomerName}"/>
                     <Button Grid.Column="1"
+                            IsEnabled ="{Binding CanHeaderEdit}"
                             Command="{Binding CustomerSearchCommand}">
                         <Rectangle Width="16" Height="16">
                             <Rectangle.Fill>
@@ -259,14 +261,14 @@
                               ItemsSource="{Binding ProductCategories}" 
                               SelectedValue="{Binding SelectedProductCategoryId}" >
                         <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
+                            <Style TargetType="ListViewItem" BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="NAME" 
-                                                Width="50" 
+                                <GridViewColumn Header="CATEGORY" 
+                                                Width="75" 
                                                 DisplayMemberBinding="{Binding Name}" 
                                                 />
 

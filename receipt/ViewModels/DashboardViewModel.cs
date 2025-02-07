@@ -84,9 +84,6 @@ namespace receipt.ViewModels
             // 条件に基づいてデータをフィルタリング
             this.Receipts = new ObservableCollection<Receipt>(
                 context.Receipts
-                    .Where(r => r.ReceiptDate.Date == this.SelectedDate.Date)
-                    .OrderBy(r => r.ReceiptNo)
-                    .ThenBy(r => r.LineNo)
             );
 
         }
