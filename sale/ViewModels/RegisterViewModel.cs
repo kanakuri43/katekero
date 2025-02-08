@@ -9,6 +9,9 @@ using System.Linq;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Collections.Specialized;
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
+using System.Windows;
 
 namespace sale.ViewModels
 {
@@ -34,10 +37,10 @@ namespace sale.ViewModels
         private ICollectionView _filteredProducts;
         private bool _canHeaderEdit;
 
-        public DelegateCommand SaveCommand { get; }
-        public DelegateCommand DeleteCommand { get; }
-        public DelegateCommand PrintCommand { get; }
-        public DelegateCommand CancelCommand { get; }
+        public DelegateCommand SaveSalesCommand { get; }
+        public DelegateCommand DeleteSalesCommand { get; }
+        public DelegateCommand PrintSalesSlipCommand { get; }
+        public DelegateCommand BackToHomeCommand { get; }
         public DelegateCommand CustomerSearchCommand { get; }
         //public DelegateCommand<Product> AddSaleDetailCommand { get; }
         public DelegateCommand ProductDoubleClickCommand { get; }
@@ -137,10 +140,10 @@ namespace sale.ViewModels
         {
             _regionManager = regionManager;
 
-            SaveCommand = new DelegateCommand(Save);
-            DeleteCommand = new DelegateCommand(Delete);
-            PrintCommand = new DelegateCommand(Print);
-            CancelCommand = new DelegateCommand(Home);
+            SaveSalesCommand = new DelegateCommand(SaveSales);
+            DeleteSalesCommand = new DelegateCommand(DeleteSales);
+            PrintSalesSlipCommand = new DelegateCommand(PrintSalesSlip);
+            BackToHomeCommand = new DelegateCommand(BackToHome);
             CustomerSearchCommand = new DelegateCommand(CustomerSearch);
             ProductDoubleClickCommand = new DelegateCommand(ProductDoubleClick);
             DeleteSaleCommand = new DelegateCommand<Sale>(DeleteSale);
@@ -227,7 +230,7 @@ namespace sale.ViewModels
             }
         }
 
-        private void Save()
+        private async void SaveSales()
         {
             using (var context = new AppDbContext())
             {
@@ -257,9 +260,29 @@ namespace sale.ViewModels
                 }
 
                 context.SaveChanges();
+
+                // カスタムダイアログを表示
+                var metroWindow = (Application.Current.MainWindow as MetroWindow);
+                if (metroWindow != null)
+                {
+                    var dialogSettings = new MetroDialogSettings
+                    {
+                        AffirmativeButtonText = "はい",
+                        NegativeButtonText = "いいえ",
+                        AnimateShow = true,
+                        AnimateHide = false
+                    };
+
+                    var result = await metroWindow.ShowMessageAsync("登録しました", "納品書を印刷しますか？", MessageDialogStyle.AffirmativeAndNegative, dialogSettings);
+
+                    if (result == MessageDialogResult.Affirmative)
+                    {
+                        PrintSalesSlip();
+                    }
+                }
             }
         }
-        private void Delete()
+        private void DeleteSales()
         {
             using (var context = new AppDbContext())
             {
@@ -274,7 +297,7 @@ namespace sale.ViewModels
 
         }
 
-        private void Print()
+        private void PrintSalesSlip()
         {
             var printDialog = new System.Windows.Controls.PrintDialog();
             if (printDialog.ShowDialog() == true)
@@ -284,7 +307,9 @@ namespace sale.ViewModels
                 var salesSlipViewModel = new SalesSlipViewModel(new ObservableCollection<Sale>(this.Sales));
 
                 // Titleを設定
-                salesSlipViewModel.SetTitle("納品書"); 
+                salesSlipViewModel.SetUpperTitle("納品書 (控)"); 
+                salesSlipViewModel.SetMiddleTitle("納品書"); 
+                salesSlipViewModel.SetLowerTitle("受領書"); 
 
                 salesSlipView.DataContext = salesSlipViewModel;
 
@@ -296,7 +321,7 @@ namespace sale.ViewModels
                 printDialog.PrintVisual(salesSlipView, "Sales Slip");
             }
         }
-        private void Home()
+        private void BackToHome()
         {
             this.Sales.Clear();
 

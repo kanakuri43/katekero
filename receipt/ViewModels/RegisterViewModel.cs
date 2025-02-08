@@ -9,6 +9,9 @@ using System.Linq;
 using System.ComponentModel;
 using System.Windows.Data;
 using System.Collections.Specialized;
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
+using System.Windows;
 
 namespace receipt.ViewModels
 {
@@ -26,8 +29,8 @@ namespace receipt.ViewModels
         private string _customerName;
         private int _selectedAccountId;
 
-        public DelegateCommand SaveCommand { get; }
-        public DelegateCommand DeleteCommand { get; }
+        public DelegateCommand SaveReceiptCommand { get; }
+        public DelegateCommand DeleteReceiptCommand { get; }
         public DelegateCommand CancelCommand { get; }
         public DelegateCommand CustomerSearchCommand { get; }
         public DelegateCommand AccountDoubleClickCommand { get; }
@@ -96,8 +99,8 @@ namespace receipt.ViewModels
         {
             _regionManager = regionManager;
 
-            SaveCommand = new DelegateCommand(Save);
-            DeleteCommand = new DelegateCommand(Delete);
+            SaveReceiptCommand = new DelegateCommand(SaveReceipt);
+            DeleteReceiptCommand = new DelegateCommand(DeleteReceipt);
             CancelCommand = new DelegateCommand(Home);
             AccountDoubleClickCommand = new DelegateCommand(AccountDoubleClick);
             CustomerSearchCommand = new DelegateCommand(CustomerSearch);
@@ -155,7 +158,7 @@ namespace receipt.ViewModels
         {
             AddReceiptDetail();
         }
-        private void Save()
+        private async void SaveReceipt()
         {
             using (var context = new AppDbContext())
             {
@@ -185,10 +188,17 @@ namespace receipt.ViewModels
                 }
 
                 context.SaveChanges();
+
+                // ダイアログを表示
+                var metroWindow = (Application.Current.MainWindow as MetroWindow);
+                if (metroWindow != null)
+                {
+                    await metroWindow.ShowMessageAsync("登録しました", "");
+                }
             }
 
         }
-        private void Delete()
+        private void DeleteReceipt()
         {
 
         }

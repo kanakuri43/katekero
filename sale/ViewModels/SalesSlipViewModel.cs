@@ -13,7 +13,9 @@ namespace sale.ViewModels
         private ObservableCollection<Sale> _sales;
         private int _saleNo;
         private DateTime _saleDate;
-        private string _title;
+        private string _upperTitle;
+        private string _middleTitle;
+        private string _lowerTitle;
         private string _customerName;
         private int _subTotal;
         private int _taxPrice;
@@ -24,10 +26,20 @@ namespace sale.ViewModels
             get { return _sales; }
             set { SetProperty(ref _sales, value); }
         }
-        public string Title
+        public string UpperTitle
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get { return _upperTitle; }
+            set { SetProperty(ref _upperTitle, value); }
+        }
+        public string MiddleTitle
+        {
+            get { return _middleTitle; }
+            set { SetProperty(ref _middleTitle, value); }
+        }
+        public string LowerTitle
+        {
+            get { return _lowerTitle; }
+            set { SetProperty(ref _lowerTitle, value); }
         }
         public int SaleNo
         {
@@ -77,9 +89,17 @@ namespace sale.ViewModels
 
         }
 
-        public void SetTitle(string title)
+        public void SetUpperTitle(string title)
         {
-            Title = title;
+            UpperTitle = title;
+        }
+        public void SetMiddleTitle(string title)
+        {
+            MiddleTitle = title;
+        }
+        public void SetLowerTitle(string title)
+        {
+            LowerTitle = title;
         }
     }
 }

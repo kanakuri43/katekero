@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <ApplicationIcon>..\katekero\katekero_icon.ico</ApplicationIcon>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>

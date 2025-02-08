@@ -13,6 +13,8 @@ namespace sale.Models
         public int Id { get; set; }
         [Column("state")]
         public int State { get; set; }
+        [Column("code")]
+        public string Code { get; set; }
         [Column("name")]
         public string Name { get; set; }
         [Column("price")]

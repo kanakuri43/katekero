@@ -48,6 +48,14 @@ namespace receipt.ViewModels
             ForwardCommand = new DelegateCommand(Forward);
             BackwardCommand = new DelegateCommand(Backward);
 
+            using (var context = new AppDbContext())
+            {
+                Receipts = new ObservableCollection<Receipt>(context.Receipts.ToList());
+            }
+
+            SelectedDate = DateTime.Now;
+            ShowReceiptsList();
+
         }
         public DelegateCommand RegisterCommand { get; }
         public DelegateCommand ReceiptDoubleClickCommand { get; }
@@ -84,6 +92,9 @@ namespace receipt.ViewModels
             // 条件に基づいてデータをフィルタリング
             this.Receipts = new ObservableCollection<Receipt>(
                 context.Receipts
+                    .Where(s => s.ReceiptDate.Date == this.SelectedDate.Date)
+                    .OrderBy(s => s.ReceiptNo)
+                    .ThenBy(s => s.LineNo)
             );
 
         }

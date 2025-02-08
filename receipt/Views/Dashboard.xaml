@@ -34,7 +34,7 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Date" DisplayMemberBinding="{Binding OrderDate, StringFormat='yyyy/MM/dd'}" Width="80"/>
-                                <GridViewColumn Header="O#" DisplayMemberBinding="{Binding OrderNo}" Width="60"/>
+                                <GridViewColumn Header="R#" DisplayMemberBinding="{Binding OrderNo}" Width="60"/>
                                 <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="160"/>
                                 <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
                                 <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
@@ -58,8 +58,64 @@
 
             </TabItem>
 
-            <TabItem Header="入金">   
-                
+            <TabItem Header="入金">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" 
+                                    Orientation="Horizontal"
+                                    Margin="0,20,0,0">
+                        <Button Command="{Binding BackwardCommand}">
+                            <iconPacks:PackIconEntypo Kind="ChevronSmallLeft" Foreground="#FF388934"/>
+                        </Button>
+
+                        <DatePicker Width="100"
+                            SelectedDate="{Binding SelectedDate}"
+                            HorizontalAlignment="Left">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectedDateChanged">
+                                    <prism:InvokeCommandAction 
+                            Command="{Binding SelectedDateChangedCommand}" 
+                            TriggerParameterPath="AddedItems"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </DatePicker>
+                        <Button Command="{Binding ForwardCommand}">
+                            <iconPacks:PackIconEntypo Kind="ChevronSmallRight" Foreground="#FF388934"/>
+                        </Button>
+
+                        <TextBox Grid.Row="0" 
+                                        Width="200"
+                                        Margin="20,0,0,0"
+                                        Controls:TextBoxHelper.Watermark="得意先検索"/>
+
+                    </StackPanel>
+
+                    <ListView Grid.Row="2" 
+                                    ItemsSource="{Binding Receipts}"
+                                    SelectedValuePath="SaleNo"
+                                    SelectedValue="{Binding SelectedReceiptNo}" >
+
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="S#" DisplayMemberBinding="{Binding ReceiptNo}" Width="60"/>
+                                <GridViewColumn Header="L#" DisplayMemberBinding="{Binding LineNo}" Width="60"/>
+                                <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="160"/>
+                                <GridViewColumn Header="Account" DisplayMemberBinding="{Binding AccountName}" Width="100"/>
+                                <GridViewColumn Header="Receipt Amount" DisplayMemberBinding="{Binding ReceiptAmount}" Width="200"/>
+                            </GridView>
+                        </ListView.View>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <prism:InvokeCommandAction Command="{Binding ReceiptDoubleClickCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ListView>
+
+                </Grid>
             </TabItem>
         </TabControl>
 
