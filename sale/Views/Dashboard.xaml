@@ -31,7 +31,7 @@
                                     Width="30">
                                 <iconPacks:PackIconMaterial Kind="Reload"/>
                             </Button>
-                            <TextBlock Text="{Binding LastFetchedAt, StringFormat='最終取得： yyyy/MM/dd HH:mm:ss'}" 
+                            <TextBlock Text="{Binding LastFetchedAt, StringFormat='最終取得： yyyy/MM/dd HH:mm'}" 
                                        Width="200"
                                        Margin="20,0,0,0"/>
                             <TextBox Width="200"
