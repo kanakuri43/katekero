@@ -201,9 +201,9 @@ namespace sale.ViewModels
                 {
                     SaleNo = 0, 
                     SaleDate = DateTime.Now,
-                    CustomerId = 0, // 必要に応じて設定
+                    CustomerCode = "0", // 必要に応じて設定
                     CustomerName = selectedOrder.CustomerName,
-                    ProductId = 0, // 必要に応じて設定
+                    ProductCode = "0", // 必要に応じて設定
                     ProductName = selectedOrder.ProductName,
                     Quantity = selectedOrder.Quantity,
                     Price = selectedOrder.Price,
