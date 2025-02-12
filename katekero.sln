@@ -5,8 +5,6 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "katekero", "katekero\katekero.csproj", "{2BBA868D-86BC-4F4A-99B5-9DF42CD9E07A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aggregate", "invoice\aggregate.csproj", "{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "receipt", "receipt\receipt.csproj", "{CB9B7E86-AC50-4FD9-8ACB-7019E68475FB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sale", "sale\sale.csproj", "{34E68EBA-517D-4081-82B5-23B71D3657DB}"
@@ -21,10 +19,6 @@ Global
 		{2BBA868D-86BC-4F4A-99B5-9DF42CD9E07A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BBA868D-86BC-4F4A-99B5-9DF42CD9E07A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BBA868D-86BC-4F4A-99B5-9DF42CD9E07A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CB9B7E86-AC50-4FD9-8ACB-7019E68475FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CB9B7E86-AC50-4FD9-8ACB-7019E68475FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB9B7E86-AC50-4FD9-8ACB-7019E68475FB}.Release|Any CPU.ActiveCfg = Release|Any CPU

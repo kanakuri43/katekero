@@ -256,10 +256,10 @@
                     </Grid.ColumnDefinitions>
 
                     <ListView Grid.Column="0"
-                              SelectedValuePath="Id"
+                              SelectedValuePath="Code"
                               Background="WhiteSmoke"
                               ItemsSource="{Binding ProductCategories}" 
-                              SelectedValue="{Binding SelectedProductCategoryId}" >
+                              SelectedValue="{Binding SelectedProductCategoryCode}" >
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem" BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -268,16 +268,19 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="CATEGORY" 
-                                                Width="75" 
-                                                DisplayMemberBinding="{Binding Name}" 
-                                                />
-
+                            Width="75" 
+                            DisplayMemberBinding="{Binding Name}" 
+                            />
                             </GridView>
                         </ListView.View>
-
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <prism:InvokeCommandAction Command="{Binding FilterProductsByCategoryCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
                     </ListView>
-                    <ListView Grid.Column="2"
-                              ItemsSource="{Binding FilteredProducts}"                               
+                    <ListView Grid.Column="1"
+                              ItemsSource="{Binding FilteredProducts}" 
                               SelectedValue="{Binding SelectedProductId}"
                               SelectedValuePath="Id">
                         <ListView.ItemContainerStyle>
@@ -295,6 +298,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
+                                <GridViewColumn Header="Category Code" Width="100" DisplayMemberBinding="{Binding CategoryCode}" />
                             </GridView>
                         </ListView.View>
                         <i:Interaction.Triggers>

@@ -25,7 +25,7 @@ namespace sale.ViewModels
         private ObservableCollection<Product> _products;
         private ObservableCollection<ProductCategory> _productCategories;
         private ObservableCollection<Sale> _sales;
-        private int _selectedProductCategoryId;
+        private string _selectedProductCategoryCode;
         private int _selectedProductId;
         private int _customerId;
         private string _customerCode;
@@ -46,7 +46,7 @@ namespace sale.ViewModels
         //public DelegateCommand<Product> AddSaleDetailCommand { get; }
         public DelegateCommand ProductDoubleClickCommand { get; }
         public DelegateCommand<Sale> DeleteSaleCommand { get; }
-
+        public DelegateCommand FilterProductsByCategoryCommand { get; }
         public int SaleId
         {
             get { return _saleId; }
@@ -91,11 +91,19 @@ namespace sale.ViewModels
                 }
             }
         }
-        public int SelectedProductCategoryId
+        public string SelectedProductCategoryCode
         {
-            get { return _selectedProductCategoryId; }
-            set { SetProperty(ref _selectedProductCategoryId, value); }
+            get { return _selectedProductCategoryCode; }
+            set
+            {
+                if (SetProperty(ref _selectedProductCategoryCode, value))
+                {
+                    FilterProductsByCategory();
+                }
+            }
         }
+
+
         public int SelectedProductId
         {
             get { return _selectedProductId; }
@@ -154,6 +162,7 @@ namespace sale.ViewModels
             CustomerSearchCommand = new DelegateCommand(CustomerSearch);
             ProductDoubleClickCommand = new DelegateCommand(ProductDoubleClick);
             DeleteSaleCommand = new DelegateCommand<Sale>(DeleteSale);
+            FilterProductsByCategoryCommand = new DelegateCommand(FilterProductsByCategory);
 
             // Salesの初期化
             Sales = new ObservableCollection<Sale>();
@@ -357,6 +366,18 @@ namespace sale.ViewModels
             AddSaleDetail();
         }
 
+        private void FilterProductsByCategory()
+        {
+            _filteredProducts.Filter = item =>
+            {
+                if (item is Product product)
+                {
+                    return product.CategoryCode == SelectedProductCategoryCode;
+                }
+                return false;
+            };
+            _filteredProducts.Refresh();
+        }
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
 

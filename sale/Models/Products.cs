@@ -17,6 +17,8 @@ namespace sale.Models
         public string Code { get; set; }
         [Column("name")]
         public string Name { get; set; }
+        [Column("category_code")]
+        public string CategoryCode { get; set; }
         [Column("price")]
         public int Price { get; set; }
         [Column("created_at")]
