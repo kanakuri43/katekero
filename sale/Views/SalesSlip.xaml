@@ -3,12 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"             
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid Margin="10" Background="White">
+    <Grid Margin="30,35,30,0" Background="White">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="360"/>
-                <RowDefinition Height="360"/>
-                <RowDefinition Height="360"/>
+                <RowDefinition Height="365"/>
+                <RowDefinition Height="365"/>
+                <RowDefinition Height="365"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.RowDefinitions>
@@ -94,7 +94,7 @@
                                     </Style>
                                 </GridViewColumn.HeaderContainerStyle>
                             </GridViewColumn>
-                            <GridViewColumn Header="商品" DisplayMemberBinding="{Binding ProductName}" Width="450">
+                            <GridViewColumn Header="商品" DisplayMemberBinding="{Binding ProductName}" Width="420">
                                 <GridViewColumn.HeaderContainerStyle>
                                     <Style TargetType="GridViewColumnHeader">
                                         <Setter Property="Background" Value="LightGray"/>
@@ -257,7 +257,7 @@
                                     </Style>
                                 </GridViewColumn.HeaderContainerStyle>
                             </GridViewColumn>
-                            <GridViewColumn Header="商品" DisplayMemberBinding="{Binding ProductName}" Width="450">
+                            <GridViewColumn Header="商品" DisplayMemberBinding="{Binding ProductName}" Width="420">
                                 <GridViewColumn.HeaderContainerStyle>
                                     <Style TargetType="GridViewColumnHeader">
                                         <Setter Property="Background" Value="LightGray"/>
@@ -421,7 +421,7 @@
                                     </Style>
                                 </GridViewColumn.HeaderContainerStyle>
                             </GridViewColumn>
-                            <GridViewColumn Header="商品" DisplayMemberBinding="{Binding ProductName}" Width="450">
+                            <GridViewColumn Header="商品" DisplayMemberBinding="{Binding ProductName}" Width="420">
                                 <GridViewColumn.HeaderContainerStyle>
                                     <Style TargetType="GridViewColumnHeader">
                                         <Setter Property="Background" Value="LightGray"/>

@@ -30,10 +30,6 @@ namespace sale.ViewModels
         private int _customerId;
         private string _customerCode;
         private string _customerName;
-        private int _includedTaxPrice;
-        private int _subTotal;
-        private int _taxPrice;
-        private int _totalAmount;
         private string _productSearchText;
         private ICollectionView _filteredProducts;
         private bool _canHeaderEdit;
@@ -192,7 +188,7 @@ namespace sale.ViewModels
                                               .ToList();
                 ProductCategories = new ObservableCollection<ProductCategory>(sortedCategories);
             }
-
+            SelectedProductCategoryCode = "0";
         }
 
         private void OnSalesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
