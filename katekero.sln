@@ -5,7 +5,7 @@ VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "katekero", "katekero\katekero.csproj", "{2BBA868D-86BC-4F4A-99B5-9DF42CD9E07A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "invoice", "invoice\invoice.csproj", "{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "aggregate", "invoice\aggregate.csproj", "{0F1E6B51-D6E3-454F-AF64-C92A1CC45297}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "receipt", "receipt\receipt.csproj", "{CB9B7E86-AC50-4FD9-8ACB-7019E68475FB}"
 EndProject

@@ -28,6 +28,7 @@ namespace sale.ViewModels
         private int _selectedProductCategoryId;
         private int _selectedProductId;
         private int _customerId;
+        private string _customerCode;
         private string _customerName;
         private int _includedTaxPrice;
         private int _subTotal;
@@ -106,11 +107,17 @@ namespace sale.ViewModels
             get { return _customerId; }
             set { SetProperty(ref _customerId, value); }
         }
+        public string CustomerCode
+        {
+            get { return _customerCode; }
+            set { SetProperty(ref _customerCode, value); }
+        }
         public string CustomerName
         {
             get { return _customerName; }
             set { SetProperty(ref _customerName, value); }
         }
+
         public bool CanHeaderEdit
         {
             get { return _canHeaderEdit; }
@@ -220,6 +227,7 @@ namespace sale.ViewModels
                         CustomerId = this.CustomerId,
                         CustomerName = this.CustomerName,
                         ProductId = product.Id,
+                        ProductCode = product.Code,
                         ProductName = product.Name,
                         Quantity = 1,
                         Price = product.Price,
@@ -249,6 +257,7 @@ namespace sale.ViewModels
                         sale.SaleDate = this.SaleDate;
                         sale.SaleNo = newSaleNo; 
                         sale.LineNo = lineNo;
+                        sale.CustomerCode = this.CustomerCode;
                         sale.CreatedAt = dt;
                         sale.UpdatedAt = dt;
                         context.Sales.Add(sale);
@@ -356,10 +365,18 @@ namespace sale.ViewModels
             {
                 // 新期
 
+                this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
+
+                // CustomersコレクションからCustomerIdに一致するCustomerを取得
+                var customer = Customers.FirstOrDefault(c => c.Id == this.CustomerId);
+                if (customer != null)
+                {
+                    this.CustomerCode = customer.Code;
+                    this.CustomerName = customer.Name;
+                }
+
                 this.SaleNo = 0;
                 this.SaleDate = DateTime.Now;
-                this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
-                this.CustomerName = navigationContext.Parameters.GetValue<string>(nameof(CustomerName));
 
                 this.CanHeaderEdit = true;  // 日付・得意先 変更可
             }
@@ -374,6 +391,7 @@ namespace sale.ViewModels
                     this.SaleNo = sale.SaleNo;
                     this.SaleDate = sale.SaleDate;
                     this.CustomerId = sale.CustomerId;
+                    this.CustomerCode = sale.CustomerCode;
                     this.CustomerName = sale.CustomerName;
 
                 }

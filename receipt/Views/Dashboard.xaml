@@ -14,49 +14,6 @@
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         <TabControl >
-            <TabItem Header="売掛金">
-                <Grid Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="20"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <TextBox Grid.Row="0" 
-                             Width="200"
-                             Margin="0,20,0,0"
-                             HorizontalAlignment="Left"
-                             Controls:TextBoxHelper.Watermark="得意先検索"/>
-                    <ListView Grid.Row="2" 
-                                    ItemsSource="{Binding Orders}"
-                                    SelectedValuePath="SaleNo"
-                                    SelectedValue="{Binding SelectedOrderNo}" >
-
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="Date" DisplayMemberBinding="{Binding OrderDate, StringFormat='yyyy/MM/dd'}" Width="80"/>
-                                <GridViewColumn Header="R#" DisplayMemberBinding="{Binding OrderNo}" Width="60"/>
-                                <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="160"/>
-                                <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="160"/>
-                                <GridViewColumn Header="Qty" DisplayMemberBinding="{Binding Quantity}" Width="50"/>
-                                <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="50"/>
-                            </GridView>
-                        </ListView.View>
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseDoubleClick">
-                                <prism:InvokeCommandAction Command="{Binding SaleDoubleClickCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </ListView>
-                    <mah:ProgressRing Grid.Row="2"
-						                    IsActive="{Binding IsProgressRingActive}" 
-                                            Width="50" Height="50" 
-                                            HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center" 
-                                            Panel.ZIndex="100" />
-
-                </Grid>
-
-            </TabItem>
 
             <TabItem Header="入金">
                 <Grid>

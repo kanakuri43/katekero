@@ -72,7 +72,7 @@ namespace sale.ViewModels
             {
                 var p = new NavigationParameters();
                 p.Add(nameof(RegisterViewModel.CustomerId), selectedCustomer.Id);
-                p.Add(nameof(RegisterViewModel.CustomerName), selectedCustomer.Name);
+                //p.Add(nameof(RegisterViewModel.CustomerName), selectedCustomer.Name);
                 _regionManager.RequestNavigate("ContentRegion", nameof(Register), p);
             }
 

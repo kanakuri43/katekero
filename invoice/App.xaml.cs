@@ -2,7 +2,7 @@
 using Prism.Ioc;
 using System.Windows;
 
-namespace invoice
+namespace aggregate
 {
     /// <summary>
     /// Interaction logic for App.xaml

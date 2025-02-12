@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
 
-namespace invoice.ViewModels
+namespace aggregate.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {

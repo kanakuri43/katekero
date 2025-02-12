@@ -26,6 +26,7 @@ namespace receipt.ViewModels
         private ObservableCollection<Account> _accounts;
         private int _totalReceiptAmount;
         private int _customerId;
+        private string _customerCode;
         private string _customerName;
         private int _selectedAccountId;
 
@@ -49,6 +50,11 @@ namespace receipt.ViewModels
         {
             get { return _receiptNo; }
             set { SetProperty(ref _receiptNo, value); }
+        }
+        public ObservableCollection<katekero.Models.Customer> Customers
+        {
+            get { return _customers; }
+            set { SetProperty(ref _customers, value); }
         }
         public int TotalReceiptAmount
         {
@@ -84,6 +90,11 @@ namespace receipt.ViewModels
             get { return _customerId; }
             set { SetProperty(ref _customerId, value); }
         }
+        public string CustomerCode
+        {
+            get { return _customerCode; }
+            set { SetProperty(ref _customerCode, value); }
+        }
         public string CustomerName
         {
             get { return _customerName; }
@@ -109,6 +120,11 @@ namespace receipt.ViewModels
             Receipts = new ObservableCollection<Receipt>();
             Receipts.CollectionChanged += OnReceiptsCollectionChanged;
 
+            // 得意先マスタ
+            using (var context = new AppDbContext())
+            {
+                Customers = new ObservableCollection<katekero.Models.Customer>(context.Customers.ToList());
+            }
             // 入金方法
             using (var context = new AppDbContext())
             {
@@ -143,6 +159,7 @@ namespace receipt.ViewModels
                         State = 0,
                         ReceiptNo = this.ReceiptNo,
                         CustomerId = this.CustomerId,
+                        CustomerCode = this.CustomerCode,
                         CustomerName = this.CustomerName,
                         AccountId = account.Id,
                         AccountName = account.Name,
@@ -223,10 +240,27 @@ namespace receipt.ViewModels
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
-            this.CustomerName = navigationContext.Parameters.GetValue<string>(nameof(CustomerName));
+            var receipts = navigationContext.Parameters.GetValue<ObservableCollection<Receipt>>(nameof(Receipts));
+            if (receipts == null)
+            {
+                // 新期
 
-            this.ReceiptDate = DateTime.Now;
+                this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
+
+                // CustomersコレクションからCustomerIdに一致するCustomerを取得
+                var customer = Customers.FirstOrDefault(c => c.Id == this.CustomerId);
+                if (customer != null)
+                {
+                    this.CustomerCode = customer.Code;
+                    this.CustomerName = customer.Name;
+                }
+
+                this.ReceiptNo = 0;
+                this.ReceiptDate = DateTime.Now;
+
+                //this.CanHeaderEdit = true;  // 日付・得意先 変更可
+            }
+
 
         }
 
