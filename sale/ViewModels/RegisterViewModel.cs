@@ -185,7 +185,10 @@ namespace sale.ViewModels
             //商品分類マスタ
             using (var context = new AppDbContext())
             {
-                ProductCategories = new ObservableCollection<ProductCategory>(context.ProductCategories.ToList());
+                var sortedCategories = context.ProductCategories
+                                              .OrderBy(pc => pc.Code) 
+                                              .ToList();
+                ProductCategories = new ObservableCollection<ProductCategory>(sortedCategories);
             }
 
         }
@@ -372,7 +375,8 @@ namespace sale.ViewModels
             {
                 if (item is Product product)
                 {
-                    return product.CategoryCode == SelectedProductCategoryCode;
+                    // SelectedProductCategoryCodeが"0"の場合、すべてのProductを表示
+                    return SelectedProductCategoryCode == "0" || product.CategoryCode == SelectedProductCategoryCode;
                 }
                 return false;
             };

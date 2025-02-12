@@ -263,14 +263,14 @@
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem" BasedOn="{StaticResource MahApps.Styles.ListViewItem}">
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Height" Value="50" />
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="CATEGORY" 
-                            Width="75" 
-                            DisplayMemberBinding="{Binding Name}" 
-                            />
+                                                Width="75" 
+                                                DisplayMemberBinding="{Binding Name}" />
                             </GridView>
                         </ListView.View>
                         <i:Interaction.Triggers>
@@ -298,7 +298,6 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="Category Code" Width="100" DisplayMemberBinding="{Binding CategoryCode}" />
                             </GridView>
                         </ListView.View>
                         <i:Interaction.Triggers>
