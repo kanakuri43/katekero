@@ -142,8 +142,10 @@ namespace sale.ViewModels
             get { return _productSearchText; }
             set
             {
-                SetProperty(ref _productSearchText, value);
-                FilterProducts();
+                if (SetProperty(ref _productSearchText, value))
+                {
+                    FilterProductsByCategory();
+                }
             }
         }
         public ICollectionView FilteredProducts
@@ -375,8 +377,9 @@ namespace sale.ViewModels
             {
                 if (item is Product product)
                 {
-                    // SelectedProductCategoryCodeが"0"の場合、すべてのProductを表示
-                    return SelectedProductCategoryCode == "0" || product.CategoryCode == SelectedProductCategoryCode;
+                    bool matchesCategory = SelectedProductCategoryCode == "0" || product.CategoryCode == SelectedProductCategoryCode;
+                    bool matchesSearchText = string.IsNullOrEmpty(ProductSearchText) || product.Name.Contains(ProductSearchText, StringComparison.OrdinalIgnoreCase);
+                    return matchesCategory && matchesSearchText;
                 }
                 return false;
             };
