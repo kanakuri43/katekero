@@ -3,7 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:prism="http://prismlibrary.com/"             
              prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
-            
+    <Grid Margin="10" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition />
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <DatePicker Grid.Row="0"
+                    Width="100"
+                    HorizontalAlignment="Left"/>
+        
+        <Button Grid.Row="3"
+                Width="100"
+                Content="実行"/>
     </Grid>
 </UserControl>
