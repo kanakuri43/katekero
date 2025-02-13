@@ -68,7 +68,6 @@ namespace aggregate.ViewModels
 
                 try
                 {
-                    // ストアドプロシージャを実行し、パラメータを渡す
                     //context.Database.ExecuteSqlRaw("EXEC usp_aggregate_invoice_balance @ParameterName1, @ParameterName2", parameter1, parameter2);
                     context.Database.ExecuteSqlRaw("EXEC usp_aggregate_invoice_balance @ParameterName1", parameter1);
                 }
