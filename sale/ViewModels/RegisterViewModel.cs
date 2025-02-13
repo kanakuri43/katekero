@@ -288,7 +288,7 @@ namespace sale.ViewModels
                     {
                         AffirmativeButtonText = "はい",
                         NegativeButtonText = "いいえ",
-                        AnimateShow = true,
+                        AnimateShow = false,
                         AnimateHide = false
                     };
 
