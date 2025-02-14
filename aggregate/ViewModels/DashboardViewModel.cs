@@ -14,6 +14,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text;
 using System.IO;
+using FastMember;
 
 namespace aggregate.ViewModels
 {
@@ -95,8 +96,10 @@ namespace aggregate.ViewModels
 
         private async void ExportInvoiceBalance()
         {
+            IsProgressRingActive = true;
+
             // SQL Server からデータ取得
-            var dt = FetchDataFromDatabase("usp_export_invoice_balance", this.SelectedDate);
+            var dt = FetchDataFromDatabase("usp_invoice_details", this.SelectedDate);
 
             // データが0件だったら終了
             if ((dt == null) || (dt.Rows.Count == 0))
@@ -106,17 +109,38 @@ namespace aggregate.ViewModels
 
             // CSVファイルを保存
             SaveAsCsvFile(dt, "rakuraku.csv");
+
+            IsProgressRingActive = false;
         }
 
-        private static DataTable FetchDataFromDatabase(string ProcedureName, DateTime IssueDate)
+        private static DataTable FetchDataFromDatabase(string ProcedureName, DateTime ClosedAt)
         {
             using (var context = new AppDbContext())
             {
                 var dt = new DataTable();
 
+                // SQLコマンドを準備
+                var command = context.Database.GetDbConnection().CreateCommand();
+                command.CommandText = $"EXEC {ProcedureName} @ClosedAt";
+                command.CommandType = CommandType.Text;
+
+                // パラメータを追加
+                var parameter = command.CreateParameter();
+                parameter.ParameterName = "@ClosedAt";
+                parameter.Value = ClosedAt;
+                command.Parameters.Add(parameter);
+
+                // 接続を開く
+                context.Database.OpenConnection();
+
+                // データを読み込む
+                using (var reader = command.ExecuteReader())
+                {
+                    dt.Load(reader);
+                }
+
                 return dt;
             }
-
         }
 
         private static void SaveAsCsvFile(DataTable dt, string csvFileName)
