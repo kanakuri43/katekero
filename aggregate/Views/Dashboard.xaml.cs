@@ -11,5 +11,6 @@ namespace aggregate.Views
         {
             InitializeComponent();
         }
+
     }
 }

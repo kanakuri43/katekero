@@ -282,22 +282,21 @@ namespace sale.ViewModels
 
                 // カスタムダイアログを表示
                 var metroWindow = (Application.Current.MainWindow as MetroWindow);
-                if (metroWindow != null)
+                if (metroWindow == null)
                 {
-                    var dialogSettings = new MetroDialogSettings
-                    {
-                        AffirmativeButtonText = "はい",
-                        NegativeButtonText = "いいえ",
-                        AnimateShow = false,
-                        AnimateHide = false
-                    };
-
-                    var result = await metroWindow.ShowMessageAsync("登録しました", "納品書を印刷しますか？", MessageDialogStyle.AffirmativeAndNegative, dialogSettings);
-
-                    if (result == MessageDialogResult.Affirmative)
-                    {
-                        PrintSalesSlip();
-                    }
+                    return;
+                }
+                var dialogSettings = new MetroDialogSettings
+                {
+                    AffirmativeButtonText = "はい",
+                    NegativeButtonText = "いいえ",
+                    AnimateShow = false,
+                    AnimateHide = false
+                };
+                var result = await metroWindow.ShowMessageAsync("登録しました", "納品書を印刷しますか？", MessageDialogStyle.AffirmativeAndNegative, dialogSettings);
+                if (result == MessageDialogResult.Affirmative)
+                {
+                    PrintSalesSlip();
                 }
             }
         }
