@@ -92,9 +92,18 @@ namespace sale.ViewModels
             get { return _sales; }
             set
             {
-                if (SetProperty(ref _sales, value))
+                if (_sales != value)
                 {
-                    _sales.CollectionChanged += OnSalesCollectionChanged;
+                    if (_sales != null)
+                    {
+                        _sales.CollectionChanged -= OnSalesCollectionChanged;
+                    }
+                    _sales = value;
+                    if (_sales != null)
+                    {
+                        _sales.CollectionChanged += OnSalesCollectionChanged;
+                    }
+                    RaisePropertyChanged(nameof(Sales));
                     RaisePropertyChanged(nameof(Subtotal));
                     RaisePropertyChanged(nameof(TaxPrice));
                     RaisePropertyChanged(nameof(TotalAmount));
@@ -141,7 +150,7 @@ namespace sale.ViewModels
             get { return _canHeaderEdit; }
             set { SetProperty(ref _canHeaderEdit, value); }
         }
-        public int Subtotal => Sales.Sum(s => s.Amount);
+        public int Subtotal => Sales.Where(s => s.SaleNo == this.SaleNo).Sum(s => s.Amount);
 
         public int TaxPrice => (int)(Subtotal * (PrimaryTaxRate * 0.01));
 
@@ -463,9 +472,13 @@ namespace sale.ViewModels
                     this.CustomerId = sale.CustomerId;
                     this.CustomerCode = sale.CustomerCode;
                     this.CustomerName = sale.CustomerName;
-
                 }
 
+                // プロパティの変更を通知
+                RaisePropertyChanged(nameof(Subtotal));
+                RaisePropertyChanged(nameof(TaxPrice));
+                RaisePropertyChanged(nameof(TotalAmount));
+                
                 this.CanHeaderEdit = false; // 日付・得意先 変更不可
             }
 

@@ -32,7 +32,7 @@ namespace receipt.ViewModels
 
         public DelegateCommand SaveReceiptCommand { get; }
         public DelegateCommand DeleteReceiptCommand { get; }
-        public DelegateCommand CancelCommand { get; }
+        public DelegateCommand BackToHomeCommand { get; }
         public DelegateCommand CustomerSearchCommand { get; }
         public DelegateCommand AccountDoubleClickCommand { get; }
 
@@ -112,7 +112,7 @@ namespace receipt.ViewModels
 
             SaveReceiptCommand = new DelegateCommand(SaveReceipt);
             DeleteReceiptCommand = new DelegateCommand(DeleteReceipt);
-            CancelCommand = new DelegateCommand(Home);
+            BackToHomeCommand = new DelegateCommand(BackToHome);
             AccountDoubleClickCommand = new DelegateCommand(AccountDoubleClick);
             CustomerSearchCommand = new DelegateCommand(CustomerSearch);
 
@@ -219,7 +219,7 @@ namespace receipt.ViewModels
         {
 
         }
-        private void Home()
+        private void BackToHome()
         {
             if (this.Receipts != null)
             {
