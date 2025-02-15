@@ -1,0 +1,13 @@
+﻿<mah:MetroWindow x:Class="customer.Views.MainWindow"
+        xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prism="http://prismlibrary.com/"
+        ResizeMode="CanMinimize"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        WindowTransitionsEnabled="False"
+        Title="{Binding Title}" Height="600" Width="900" >
+    <Grid>
+        <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+    </Grid>
+</mah:MetroWindow>

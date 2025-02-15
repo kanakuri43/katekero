@@ -6,7 +6,7 @@
     <ApplicationIcon>..\katekero\katekero_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\katekero\Models\Customers.cs" Link="Models\Customers.cs" />
+    <Compile Include="..\katekero\Models\Customer.cs" Link="Models\Customer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\katekero\config.xml" Link="config.xml">

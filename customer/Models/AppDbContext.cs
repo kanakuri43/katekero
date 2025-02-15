@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace katekero.Models
+namespace customer.Models
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Customer> Customers { get; set; }
+        public DbSet<katekero.Models.Customer> Customers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

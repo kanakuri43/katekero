@@ -208,9 +208,14 @@ namespace receipt.ViewModels
 
                 // ダイアログを表示
                 var metroWindow = (Application.Current.MainWindow as MetroWindow);
-                if (metroWindow != null)
+                var dialogSettings = new MetroDialogSettings
                 {
-                    await metroWindow.ShowMessageAsync("登録しました", "");
+                    AffirmativeButtonText = "OK",
+                    AnimateShow = false,
+                    AnimateHide = false
+                }; if (metroWindow != null)
+                {
+                    await metroWindow.ShowMessageAsync("登録しました", "", MessageDialogStyle.Affirmative, dialogSettings);
                 }
             }
 
