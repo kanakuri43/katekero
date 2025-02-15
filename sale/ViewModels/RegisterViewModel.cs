@@ -24,7 +24,6 @@ namespace sale.ViewModels
         private ObservableCollection<katekero.Models.Customer> _customers;
         private ObservableCollection<Product> _products;
         private ObservableCollection<ProductCategory> _productCategories;
-        //private ObservableCollection<TaxRateHistory> _taxRateHistories;
         private ObservableCollection<Sale> _sales;
         private string _selectedProductCategoryCode;
         private int _selectedProductId;
@@ -42,7 +41,6 @@ namespace sale.ViewModels
         public DelegateCommand PrintSalesSlipCommand { get; }
         public DelegateCommand BackToHomeCommand { get; }
         public DelegateCommand CustomerSearchCommand { get; }
-        //public DelegateCommand<Product> AddSaleDetailCommand { get; }
         public DelegateCommand ProductDoubleClickCommand { get; }
         public DelegateCommand<Sale> DeleteSaleCommand { get; }
         public DelegateCommand FilterProductsByCategoryCommand { get; }
@@ -82,11 +80,7 @@ namespace sale.ViewModels
             get { return _productCategories; }
             set { SetProperty(ref _productCategories, value); }
         }
-        //public ObservableCollection<TaxRateHistory> TaxRateHistories
-        //{
-        //    get { return _taxRateHistories; }
-        //    set { SetProperty(ref _taxRateHistories, value); }
-        //}
+
         public ObservableCollection<Sale> Sales
         {
             get { return _sales; }

@@ -28,7 +28,7 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                      Margin="2"
-                     Command="{Binding CancelCommand}">
+                     Command="{Binding BackToHomeCommand}">
                 <iconPacks:PackIconMaterial Kind="Home" />
             </Button>
             <Button Grid.Column="1" 
