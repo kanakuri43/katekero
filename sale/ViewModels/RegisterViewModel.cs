@@ -24,6 +24,7 @@ namespace sale.ViewModels
         private ObservableCollection<katekero.Models.Customer> _customers;
         private ObservableCollection<Product> _products;
         private ObservableCollection<ProductCategory> _productCategories;
+        //private ObservableCollection<TaxRateHistory> _taxRateHistories;
         private ObservableCollection<Sale> _sales;
         private string _selectedProductCategoryCode;
         private int _selectedProductId;
@@ -33,6 +34,8 @@ namespace sale.ViewModels
         private string _productSearchText;
         private ICollectionView _filteredProducts;
         private bool _canHeaderEdit;
+        private int _primaryTaxRate;
+        private int _secondaryTaxRate;
 
         public DelegateCommand SaveSalesCommand { get; }
         public DelegateCommand DeleteSalesCommand { get; }
@@ -51,7 +54,13 @@ namespace sale.ViewModels
         public DateTime SaleDate
         {
             get { return _saleDate; }
-            set { SetProperty(ref _saleDate, value); }
+            set
+            {
+                if (SetProperty(ref _saleDate, value))
+                {
+                    UpdateTaxRates();
+                }
+            }
         }
         public int SaleNo
         {
@@ -73,6 +82,11 @@ namespace sale.ViewModels
             get { return _productCategories; }
             set { SetProperty(ref _productCategories, value); }
         }
+        //public ObservableCollection<TaxRateHistory> TaxRateHistories
+        //{
+        //    get { return _taxRateHistories; }
+        //    set { SetProperty(ref _taxRateHistories, value); }
+        //}
         public ObservableCollection<Sale> Sales
         {
             get { return _sales; }
@@ -129,7 +143,7 @@ namespace sale.ViewModels
         }
         public int Subtotal => Sales.Sum(s => s.Amount);
 
-        public int TaxPrice => (int)(Subtotal * 0.1);
+        public int TaxPrice => (int)(Subtotal * (PrimaryTaxRate * 0.01));
 
         public int TotalAmount => Subtotal + TaxPrice;
 
@@ -149,6 +163,17 @@ namespace sale.ViewModels
             get { return _filteredProducts; }
         }
 
+        public int PrimaryTaxRate
+        {
+            get { return _primaryTaxRate; }
+            set { SetProperty(ref _primaryTaxRate, value); }
+        }
+        public int SecondaryTaxRate
+        {
+            get { return _secondaryTaxRate; }
+            set { SetProperty(ref _secondaryTaxRate, value); }
+        }
+
         public RegisterViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
@@ -165,6 +190,10 @@ namespace sale.ViewModels
             // Salesの初期化
             Sales = new ObservableCollection<Sale>();
             Sales.CollectionChanged += OnSalesCollectionChanged;
+
+            this.SaleNo = 0;
+            this.SaleDate = DateTime.Now;
+
 
             // 商品マスタ
             using (var context = new AppDbContext())
@@ -189,6 +218,9 @@ namespace sale.ViewModels
                 ProductCategories = new ObservableCollection<ProductCategory>(sortedCategories);
             }
             SelectedProductCategoryCode = "0";
+
+            // 税率を取得
+            UpdateTaxRates();
         }
 
         private void OnSalesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -380,6 +412,24 @@ namespace sale.ViewModels
             };
             _filteredProducts.Refresh();
         }
+
+        private void UpdateTaxRates()
+        {
+            using (var context = new AppDbContext())
+            {
+                var taxRateHistory = context.TaxRateHistories
+                    .Where(trh => trh.StartedDate <= SaleDate)
+                    .OrderByDescending(trh => trh.StartedDate)
+                    .FirstOrDefault();
+
+                if (taxRateHistory != null)
+                {
+                    PrimaryTaxRate = taxRateHistory.PrimaryTaxRate;     // 消費税率
+                    SecondaryTaxRate = taxRateHistory.SecondaryTaxRate; // 軽減税率
+                }
+            }
+        }
+
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
 
@@ -397,9 +447,6 @@ namespace sale.ViewModels
                     this.CustomerCode = customer.Code;
                     this.CustomerName = customer.Name;
                 }
-
-                this.SaleNo = 0;
-                this.SaleDate = DateTime.Now;
 
                 this.CanHeaderEdit = true;  // 日付・得意先 変更可
             }

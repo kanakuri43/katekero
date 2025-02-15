@@ -25,6 +25,7 @@
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
                      Margin="2"
@@ -95,11 +96,12 @@
 
             <StackPanel Grid.Column="5" 
                         Orientation="Vertical">
-                <DatePicker Grid.Column="4"
-                            IsEnabled ="{Binding CanHeaderEdit}"
+                <DatePicker IsEnabled ="{Binding CanHeaderEdit}"
                             SelectedDate="{Binding SaleDate}"/>
-
             </StackPanel>
+            <TextBlock Grid.Column="6"
+                      TextAlignment="Right"
+                       Text="{Binding PrimaryTaxRate, StringFormat='消費税率 \{0\} %'}"/>
 
         </Grid>
 
