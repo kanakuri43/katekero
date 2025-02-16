@@ -101,7 +101,6 @@ namespace sale.ViewModels
                 Customers = new ObservableCollection<Customer>(context.Customers.ToList());
             }
 
-
             Reload();
             // Timerの設定 (1分ごと)
             _timer = new Timer(60000);
@@ -114,6 +113,8 @@ namespace sale.ViewModels
             ShowSalesList();
 
         }
+
+
         public DelegateCommand RegisterCommand { get; }
         public DelegateCommand SaleDoubleClickCommand { get; }
         public DelegateCommand OrderDoubleClickCommand { get; }
@@ -121,6 +122,7 @@ namespace sale.ViewModels
         public DelegateCommand ForwardCommand { get; }
         public DelegateCommand BackwardCommand { get; }
         public DelegateCommand ManualReloadCommand { get; }
+
 
         private void Register()
         {
@@ -139,12 +141,12 @@ namespace sale.ViewModels
             ShowSalesList();
         }
 
-        private async void Reload()
+        private void Reload()
         {
             IsProgressRingActive = true;
 
-            await FetchKintoneOrders(new string[] { });
-            await FetchKintoneCustomers(new string[] { });
+            FetchKintoneOrders(new string[] { });
+            FetchKintoneCustomers(new string[] { });
 
             LastFetchedAt = DateTime.Now;
 
