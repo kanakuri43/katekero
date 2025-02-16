@@ -40,7 +40,7 @@
 
                         </StackPanel>
                         <ListView Grid.Row="2" 
-                                    ItemsSource="{Binding Orders}"
+                                    ItemsSource="{Binding FetchedOrders}"
                                     SelectedValuePath="OrderNo"
                                     SelectedValue="{Binding SelectedOrderNo}" >
 

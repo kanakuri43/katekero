@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Timers;
+using katekero.Models;
 
 namespace sale.ViewModels
 {
@@ -20,7 +21,9 @@ namespace sale.ViewModels
     {
         private readonly IRegionManager _regionManager;
         private ObservableCollection<Sale> _sales;
-        private ObservableCollection<Order> _orders;
+        private ObservableCollection<Order> _fetchedOrders;
+        private ObservableCollection<Customer> _fetchedCustomers;
+        private ObservableCollection<Customer> _customers;
         private int _selectedSaleNo;
         private int _selectedOrderNo;
         private DateTime _selectedDate;
@@ -29,10 +32,20 @@ namespace sale.ViewModels
         private bool _isProgressRingActive;
         private readonly Timer _timer;
 
-        public ObservableCollection<Order> Orders
+        public ObservableCollection<Customer> FetchedCustomers
         {
-            get { return _orders; }
-            set { SetProperty(ref _orders, value); }
+            get { return _fetchedCustomers; }
+            set { SetProperty(ref _fetchedCustomers, value); }
+        }
+        public ObservableCollection<Customer> Customers
+        {
+            get { return _customers; }
+            set { SetProperty(ref _customers, value); }
+        }
+        public ObservableCollection<Order> FetchedOrders
+        {
+            get { return _fetchedOrders; }
+            set { SetProperty(ref _fetchedOrders, value); }
         }
         public ObservableCollection<Sale> Sales
         {
@@ -78,22 +91,25 @@ namespace sale.ViewModels
             OrderDoubleClickCommand = new DelegateCommand(OrderDoubleClick);
             SelectedDateChangedCommand = new DelegateCommand(SelectedDateChanged);
             RegisterCommand = new DelegateCommand(Register);
-            ForwardCommand = new DelegateCommand(Forward);
-            BackwardCommand = new DelegateCommand(Backward);
-            ManualReloadCommand = new DelegateCommand(ManualReload);
+            ForwardCommand = new DelegateCommand(ForwardDate);
+            BackwardCommand = new DelegateCommand(BackwardDate);
+            ManualReloadCommand = new DelegateCommand(Reload);
 
             using (var context = new AppDbContext())
             {
                 Sales = new ObservableCollection<Sale>(context.Sales.ToList());
+                Customers = new ObservableCollection<Customer>(context.Customers.ToList());
             }
 
-            ManualReload();
-            // Timerの設定
-            _timer = new Timer(60000); // 1分ごとに実行
-            _timer.Elapsed += (sender, e) => ManualReload();
+
+            Reload();
+            // Timerの設定 (1分ごと)
+            _timer = new Timer(60000);
+            _timer.Elapsed += (sender, e) => Reload();
             _timer.Start();
 
-            IsProgressRingActive = false;
+            //UpdateCustomersByKintoneMaster();
+
             SelectedDate = DateTime.Now;
             ShowSalesList();
 
@@ -112,28 +128,111 @@ namespace sale.ViewModels
             _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
 
         }
-        private void Forward()
+        private void ForwardDate()
         {
             this.SelectedDate = this.SelectedDate.AddDays(1);
             ShowSalesList();
         }
-        private void Backward()
+        private void BackwardDate()
         {
             this.SelectedDate = this.SelectedDate.AddDays(-1);
             ShowSalesList();
         }
-        private async void ManualReload()
+
+        private async void Reload()
         {
-            await FetchKintone(new string[] { });
+            IsProgressRingActive = true;
+
+            await FetchKintoneOrders(new string[] { });
+            await FetchKintoneCustomers(new string[] { });
 
             LastFetchedAt = DateTime.Now;
+
+            IsProgressRingActive = false;
         }
 
-        private async Task FetchKintone(string[] args)
+        private void UpdateCustomersByKintoneMaster()
+        {
+            using (var context = new AppDbContext())
+            {
+                var dt = DateTime.Now;
+
+                foreach (var fetchedCustomer in FetchedCustomers)
+                {
+                    var existingCustomer = context.Customers
+                        .FirstOrDefault(c => c.Code == fetchedCustomer.Code);
+
+                    if (existingCustomer == null)
+                    {
+                        // Insert new customer
+                        fetchedCustomer.CreatedAt = dt;
+                        fetchedCustomer.UpdatedAt = dt;
+                        context.Customers.Add(fetchedCustomer);
+                    }
+                    else
+                    {
+                        // Update existing customer
+                        existingCustomer.Name = fetchedCustomer.Name;
+                        existingCustomer.Address = fetchedCustomer.Address;
+                        existingCustomer.State = fetchedCustomer.State;
+                        existingCustomer.UpdatedAt = dt;
+                    }
+                }
+
+                context.SaveChangesAsync();
+            }
+        }
+
+        private async Task FetchKintoneCustomers(string[] args)
         {
             try
             {
-                IsProgressRingActive = true; 
+
+                HttpClient client = new HttpClient();
+
+                // kintoneのAPIトークン
+                string apiToken = "DACJDxy3G7iLkvL0bbEIgUUnS4LdNJo8HcSNiW5Q";
+
+                // ヘッダーにAPIトークンを設定
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("X-Cybozu-API-Token", apiToken);
+
+                // レコード取得のURL
+                string url = $"https://vk5k755s9nir.cybozu.com/k/v1/records.json?app=204";
+
+                // レコードを取得
+                HttpResponseMessage response = await client.GetAsync(url);
+
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                // JSONデータをOrderオブジェクトに変換
+                var jsonObject = JObject.Parse(responseBody);
+                var records = jsonObject["records"].Select(record => new Customer
+                {
+                    Id = int.Parse((string)record["$id"]?["value"]),
+                    State = 0,
+                    Code = (string)record["code"]?["value"],
+                    Name = (string)record["name"]?["value"],
+                    Address = (string)record["address"]?["value"]
+                }).ToList();
+
+                FetchedCustomers = new ObservableCollection<Customer>(records);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+
+            }
+
+        }
+        private async Task FetchKintoneOrders(string[] args)
+        {
+            try
+            {
 
                 HttpClient client = new HttpClient();
 
@@ -168,7 +267,7 @@ namespace sale.ViewModels
                     Price = int.Parse((string)record["price"]["value"])
                 }).ToList();
 
-                Orders = new ObservableCollection<Order>(records);
+                FetchedOrders = new ObservableCollection<Order>(records);
             }
             catch (Exception ex)
             {
@@ -176,7 +275,7 @@ namespace sale.ViewModels
             }
             finally
             {
-                IsProgressRingActive = false; 
+
             }
 
         }
@@ -194,7 +293,7 @@ namespace sale.ViewModels
 
         private void OrderDoubleClick()
         {
-            var selectedOrder = Orders.FirstOrDefault(o => o.OrderNo == SelectedOrderNo);
+            var selectedOrder = FetchedOrders.FirstOrDefault(o => o.OrderNo == SelectedOrderNo);
             if (selectedOrder != null)
             {
                 var sale = new Sale

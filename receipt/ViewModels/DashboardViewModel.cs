@@ -45,8 +45,8 @@ namespace receipt.ViewModels
             ReceiptDoubleClickCommand = new DelegateCommand(ReceiptDoubleClick);
             SelectedDateChangedCommand = new DelegateCommand(SelectedDateChanged);
             RegisterCommand = new DelegateCommand(Register);
-            ForwardCommand = new DelegateCommand(Forward);
-            BackwardCommand = new DelegateCommand(Backward);
+            ForwardCommand = new DelegateCommand(ForwardDate);
+            BackwardCommand = new DelegateCommand(BackwardDate);
 
             using (var context = new AppDbContext())
             {
@@ -70,12 +70,12 @@ namespace receipt.ViewModels
             _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
 
         }
-        private void Forward()
+        private void ForwardDate()
         {
             this.SelectedDate = this.SelectedDate.AddDays(1);
             ShowReceiptsList();
         }
-        private void Backward()
+        private void BackwardDate()
         {
             this.SelectedDate = this.SelectedDate.AddDays(-1);
             ShowReceiptsList();
