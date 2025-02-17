@@ -14,6 +14,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Timers;
 using katekero.Models;
+using System.Windows.Documents;
 
 namespace sale.ViewModels
 {
@@ -288,8 +289,9 @@ namespace sale.ViewModels
                     ProductCode = (string)record["product_code"]["value"],
                     ProductName = (string)record["product_name"]["value"],
                     Quantity = int.Parse((string)record["qty"]["value"]),
-                    Price = int.Parse((string)record["price"]["value"])
-                }).ToList();
+                    Price = int.Parse((string)record["price"]["value"]),
+                    Sold = int.TryParse((string)record["sold"]?["value"], out int soldValue) ? soldValue : 0
+                }).Where(order => order.Sold != 1).ToList();
 
                 FetchedOrders = new ObservableCollection<Order>(records.OrderBy(o => o.OrderDate));
             }
