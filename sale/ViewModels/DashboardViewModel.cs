@@ -25,6 +25,7 @@ namespace sale.ViewModels
         private ObservableCollection<Order> _fetchedOrders;
         private ObservableCollection<Customer> _fetchedCustomers;
         private ObservableCollection<Customer> _customers;
+        private ObservableCollection<Product> _fetchedProducts;
         private int _selectedSaleNo;
         private int _selectedOrderNo;
         private DateTime _selectedDate;
@@ -33,6 +34,11 @@ namespace sale.ViewModels
         private bool _isProgressRingActive;
         private readonly Timer _timer;
 
+        public ObservableCollection<Product> FetchedProducts
+        {
+            get { return _fetchedProducts; }
+            set { SetProperty(ref _fetchedProducts, value); }
+        }
         public ObservableCollection<Customer> FetchedCustomers
         {
             get { return _fetchedCustomers; }
@@ -102,18 +108,20 @@ namespace sale.ViewModels
                 Customers = new ObservableCollection<Customer>(context.Customers.ToList());
             }
 
+            IsProgressRingActive = true;
+
             Reload();
             // Timerの設定 (1分ごと)
             _timer = new Timer(60000);
             _timer.Elapsed += (sender, e) => Reload();
             _timer.Start();
 
-            //UpdateCustomersByKintoneMaster();
-
             SelectedDate = DateTime.Now;
             ShowSalesList();
 
             _ = InitializeAsync();
+
+            IsProgressRingActive = false;
 
         }
 
@@ -128,8 +136,13 @@ namespace sale.ViewModels
 
         private async Task InitializeAsync()
         {
+            // kintone から customers 取込
             await FetchKintoneCustomersAsync();
             UpdateCustomersByKintoneMaster();
+
+            // kintone から products 取込
+            await FetchKintoneProductsAsync();
+            UpdateProductsByKintoneMaster();
         }
         private async Task FetchKintoneCustomersAsync()
         {
@@ -167,6 +180,44 @@ namespace sale.ViewModels
                 // エラーハンドリング
             }
         }
+        private async Task FetchKintoneProductsAsync()
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+
+                // kintoneのAPIトークン
+                string apiToken = "ovg4UNJ4DHalpTrDxSlSpuOpSOWnesdH6FUztYPd";
+
+                // ヘッダーにAPIトークンを設定
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("X-Cybozu-API-Token", apiToken);
+
+                string url = $"https://vk5k755s9nir.cybozu.com/k/v1/records.json?app=205";
+                HttpResponseMessage response = await client.GetAsync(url);
+                string responseBody = await response.Content.ReadAsStringAsync();
+
+                // JSONデータをOrderオブジェクトに変換
+                var jsonObject = JObject.Parse(responseBody);
+                var records = jsonObject["records"].Select(record => new Product
+                {
+                    Id = int.Parse((string)record["$id"]?["value"]),
+                    State = 0,
+                    Code = (string)record["code"]?["value"],
+                    Name = (string)record["name"]?["value"],
+                    Price = int.Parse((string)record["price"]["value"]),
+                    CategoryCode = (string)record["category_code"]?["value"],
+                }).ToList();
+
+                FetchedProducts = new ObservableCollection<Product>(records);
+            }
+            catch (Exception ex)
+            {
+                // エラーハンドリング
+            }
+        }
+
         private void Register()
         {
             var p = new NavigationParameters();
@@ -186,13 +237,8 @@ namespace sale.ViewModels
 
         private void Reload()
         {
-            IsProgressRingActive = true;
-
             _ = FetchKintoneOrders(new string[] { });
-
             LastFetchedAt = DateTime.Now;
-
-            IsProgressRingActive = false;
         }
 
         private void UpdateCustomersByKintoneMaster()
@@ -233,6 +279,61 @@ namespace sale.ViewModels
                         existingCustomer.Address = fetchedCustomer.Address;
                         existingCustomer.State = fetchedCustomer.State;
                         existingCustomer.UpdatedAt = dt;
+                    }
+
+                }
+
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    // エラーハンドリング
+                    Console.WriteLine($"Error saving changes: {ex.Message}");
+                }
+            }
+        }
+        private void UpdateProductsByKintoneMaster()
+        {
+            if (FetchedProducts == null || !FetchedProducts.Any())
+            {
+                // FetchedProductsがnullまたは空の場合、処理を中断
+                return;
+            }
+
+            using (var context = new AppDbContext())
+            {
+                var dt = DateTime.Now;
+
+                foreach (var fetchedProducts in FetchedProducts)
+                {
+                    var existingProduct = context.Products
+                        .FirstOrDefault(c => c.Code == fetchedProducts.Code);
+
+                    if (existingProduct == null)
+                    {
+                        // 新しい顧客を挿入
+                        var newProduct = new Product
+                        {
+                            State = fetchedProducts.State,
+                            Code = fetchedProducts.Code,
+                            Name = fetchedProducts.Name,
+                            Price = fetchedProducts.Price,
+                            CategoryCode = fetchedProducts.CategoryCode,
+                            CreatedAt = dt,
+                            UpdatedAt = dt
+                        };
+                        context.Products.Add(newProduct);
+                    }
+                    else
+                    {
+                        // 既存の顧客を更新
+                        existingProduct.State = fetchedProducts.State;
+                        existingProduct.Name = fetchedProducts.Name;
+                        existingProduct.Price = fetchedProducts.Price;
+                        existingProduct.CategoryCode = fetchedProducts.CategoryCode;
+                        existingProduct.UpdatedAt = dt;
                     }
 
                 }
