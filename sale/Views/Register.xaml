@@ -174,13 +174,19 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="1"
-                               Text="合計"
+                               Text="合計 (税込)"
                                FontSize="20"/>
                     <TextBlock Grid.Row="0" Grid.Column="2"
                                    TextAlignment="Right"
                                    FontSize="32" 
                                    VerticalAlignment="Center"
                                    Text="{Binding TotalAmount, StringFormat='\\{0:N0}'}"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1"
+                               Text="内消費税額"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2"
+                                   TextAlignment="Right"
+                                   VerticalAlignment="Center"
+                                   Text="{Binding TaxPrice, StringFormat='\\{0:N0}'}"/>
 
                 </Grid>
 

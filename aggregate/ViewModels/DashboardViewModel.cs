@@ -94,7 +94,7 @@ namespace aggregate.ViewModels
 
         }
 
-        private async void ExportInvoiceBalance()
+        private void ExportInvoiceBalance()
         {
             IsProgressRingActive = true;
 

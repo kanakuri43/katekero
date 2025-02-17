@@ -145,12 +145,8 @@ namespace sale.ViewModels
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Add("X-Cybozu-API-Token", apiToken);
 
-                // レコード取得のURL
                 string url = $"https://vk5k755s9nir.cybozu.com/k/v1/records.json?app=204";
-
-                // レコードを取得
                 HttpResponseMessage response = await client.GetAsync(url);
-
                 string responseBody = await response.Content.ReadAsStringAsync();
 
                 // JSONデータをOrderオブジェクトに変換
@@ -192,7 +188,7 @@ namespace sale.ViewModels
         {
             IsProgressRingActive = true;
 
-            FetchKintoneOrders(new string[] { });
+            _ = FetchKintoneOrders(new string[] { });
 
             LastFetchedAt = DateTime.Now;
 
