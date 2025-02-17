@@ -112,6 +112,8 @@ namespace sale.ViewModels
             SelectedDate = DateTime.Now;
             ShowSalesList();
 
+            _ = InitializeAsync();
+
         }
 
 
@@ -123,73 +125,15 @@ namespace sale.ViewModels
         public DelegateCommand BackwardCommand { get; }
         public DelegateCommand ManualReloadCommand { get; }
 
-
-        private void Register()
+        private async Task InitializeAsync()
         {
-            var p = new NavigationParameters();
-            _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
-
+            await FetchKintoneCustomersAsync();
+            UpdateCustomersByKintoneMaster();
         }
-        private void ForwardDate()
-        {
-            this.SelectedDate = this.SelectedDate.AddDays(1);
-            ShowSalesList();
-        }
-        private void BackwardDate()
-        {
-            this.SelectedDate = this.SelectedDate.AddDays(-1);
-            ShowSalesList();
-        }
-
-        private void Reload()
-        {
-            IsProgressRingActive = true;
-
-            FetchKintoneOrders(new string[] { });
-            FetchKintoneCustomers(new string[] { });
-
-            LastFetchedAt = DateTime.Now;
-
-            IsProgressRingActive = false;
-        }
-
-        private void UpdateCustomersByKintoneMaster()
-        {
-            using (var context = new AppDbContext())
-            {
-                var dt = DateTime.Now;
-
-                foreach (var fetchedCustomer in FetchedCustomers)
-                {
-                    var existingCustomer = context.Customers
-                        .FirstOrDefault(c => c.Code == fetchedCustomer.Code);
-
-                    if (existingCustomer == null)
-                    {
-                        // Insert new customer
-                        fetchedCustomer.CreatedAt = dt;
-                        fetchedCustomer.UpdatedAt = dt;
-                        context.Customers.Add(fetchedCustomer);
-                    }
-                    else
-                    {
-                        // Update existing customer
-                        existingCustomer.Name = fetchedCustomer.Name;
-                        existingCustomer.Address = fetchedCustomer.Address;
-                        existingCustomer.State = fetchedCustomer.State;
-                        existingCustomer.UpdatedAt = dt;
-                    }
-                }
-
-                context.SaveChangesAsync();
-            }
-        }
-
-        private async Task FetchKintoneCustomers(string[] args)
+        private async Task FetchKintoneCustomersAsync()
         {
             try
             {
-
                 HttpClient client = new HttpClient();
 
                 // kintoneのAPIトークン
@@ -223,14 +167,92 @@ namespace sale.ViewModels
             }
             catch (Exception ex)
             {
-
+                // エラーハンドリング
             }
-            finally
-            {
-
-            }
+        }
+        private void Register()
+        {
+            var p = new NavigationParameters();
+            _regionManager.RequestNavigate("ContentRegion", nameof(Views.Register), p);
 
         }
+        private void ForwardDate()
+        {
+            this.SelectedDate = this.SelectedDate.AddDays(1);
+            ShowSalesList();
+        }
+        private void BackwardDate()
+        {
+            this.SelectedDate = this.SelectedDate.AddDays(-1);
+            ShowSalesList();
+        }
+
+        private void Reload()
+        {
+            IsProgressRingActive = true;
+
+            FetchKintoneOrders(new string[] { });
+
+            LastFetchedAt = DateTime.Now;
+
+            IsProgressRingActive = false;
+        }
+
+        private void UpdateCustomersByKintoneMaster()
+        {
+            if (FetchedCustomers == null || !FetchedCustomers.Any())
+            {
+                // FetchedCustomersがnullまたは空の場合、処理を中断
+                return;
+            }
+
+            using (var context = new AppDbContext())
+            {
+                var dt = DateTime.Now;
+
+                foreach (var fetchedCustomer in FetchedCustomers)
+                {
+                    var existingCustomer = context.Customers
+                        .FirstOrDefault(c => c.Code == fetchedCustomer.Code);
+
+                    if (existingCustomer == null)
+                    {
+                        // 新しい顧客を挿入
+                        var newCustomer = new Customer
+                        {
+                            State = fetchedCustomer.State,
+                            Code = fetchedCustomer.Code,
+                            Name = fetchedCustomer.Name,
+                            Address = fetchedCustomer.Address,
+                            CreatedAt = dt,
+                            UpdatedAt = dt
+                        };
+                        context.Customers.Add(newCustomer);
+                    }
+                    else
+                    {
+                        // 既存の顧客を更新
+                        existingCustomer.Name = fetchedCustomer.Name;
+                        existingCustomer.Address = fetchedCustomer.Address;
+                        existingCustomer.State = fetchedCustomer.State;
+                        existingCustomer.UpdatedAt = dt;
+                    }
+
+                }
+
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    // エラーハンドリング
+                    Console.WriteLine($"Error saving changes: {ex.Message}");
+                }
+            }
+        }
+
+
         private async Task FetchKintoneOrders(string[] args)
         {
             try
@@ -269,7 +291,7 @@ namespace sale.ViewModels
                     Price = int.Parse((string)record["price"]["value"])
                 }).ToList();
 
-                FetchedOrders = new ObservableCollection<Order>(records);
+                FetchedOrders = new ObservableCollection<Order>(records.OrderBy(o => o.OrderDate));
             }
             catch (Exception ex)
             {
