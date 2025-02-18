@@ -17,7 +17,7 @@ namespace sale.ViewModels
         private ObservableCollection<Sale> _sales;
         private ObservableCollection<katekero.Models.Customer> _customers;
         private int _saleNo;
-        private int _customerId;
+        private string _customerCode;
 
         public ObservableCollection<Sale> Sales
         {
@@ -35,10 +35,10 @@ namespace sale.ViewModels
             get { return _saleNo; }
             set { SetProperty(ref _saleNo, value); }
         }
-        public int CustomerId
+        public string CustomerCode
         {
-            get { return _customerId; }
-            set { SetProperty(ref _customerId, value); }
+            get { return _customerCode; }
+            set { SetProperty(ref _customerCode, value); }
         }
 
         public CustomerSearchViewModel(IRegionManager regionManager)
@@ -61,17 +61,17 @@ namespace sale.ViewModels
         {
             var p = new NavigationParameters();
             p.Add(nameof(RegisterViewModel.SaleNo), this.SaleNo);
-            p.Add(nameof(RegisterViewModel.CustomerId), 0);
+            p.Add(nameof(RegisterViewModel.CustomerCode), 0);
             _regionManager.RequestNavigate("ContentRegion", nameof(Register), p);
 
         }
         private void CustomerDoubleClick()
         {
-            var selectedCustomer = Customers.FirstOrDefault(c => c.Id == CustomerId);
+            var selectedCustomer = Customers.FirstOrDefault(c => c.Code == CustomerCode);
             if (selectedCustomer != null)
             {
                 var p = new NavigationParameters();
-                p.Add(nameof(RegisterViewModel.CustomerId), selectedCustomer.Id);
+                p.Add(nameof(RegisterViewModel.CustomerCode), selectedCustomer.Code);
                 //p.Add(nameof(RegisterViewModel.CustomerName), selectedCustomer.Name);
                 _regionManager.RequestNavigate("ContentRegion", nameof(Register), p);
             }

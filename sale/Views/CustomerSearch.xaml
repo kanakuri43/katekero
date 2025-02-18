@@ -55,10 +55,10 @@
                  Controls:TextBoxHelper.Watermark="得意先検索"/>
 
         <ListView Grid.Row="4"
-                  SelectedValuePath="Id"
+                  SelectedValuePath="Code"
                   Background="WhiteSmoke"
                   ItemsSource="{Binding Customers}" 
-                  SelectedValue="{Binding CustomerId}" >
+                  SelectedValue="{Binding CustomerCode}" >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />

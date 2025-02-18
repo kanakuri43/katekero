@@ -432,13 +432,16 @@ namespace sale.ViewModels
             var selectedOrder = FetchedOrders.FirstOrDefault(o => o.OrderNo == SelectedOrderNo);
             if (selectedOrder != null)
             {
+                var customer = Customers.FirstOrDefault(c => c.Code == selectedOrder.CustomerCode);
                 var sale = new Sale
                 {
                     SaleNo = 0, 
                     SaleDate = DateTime.Now,
-                    CustomerCode = "0", // 必要に応じて設定
+                    CustomerCode = selectedOrder.CustomerCode, 
                     CustomerName = selectedOrder.CustomerName,
-                    ProductCode = "0", // 必要に応じて設定
+                    CustomerZipCode = customer?.ZipCode ?? "",
+                    CustomerAddress = customer?.Address ?? "",
+                    ProductCode = selectedOrder.ProductCode, 
                     ProductName = selectedOrder.ProductName,
                     Quantity = selectedOrder.Quantity,
                     Price = selectedOrder.Price,

@@ -22,8 +22,6 @@ namespace sale.Models
         [Column("line_no")]
         public int LineNo { get; set; }
 
-        [Column("customer_id")]
-        public int CustomerId { get; set; }
         [Column("customer_Code")]
         public string CustomerCode { get; set; }
         [Column("customer_name")]
@@ -33,8 +31,6 @@ namespace sale.Models
         [Column("customer_zip_code")]
         public string CustomerZipCode { get; set; }
 
-        [Column("product_id")]
-        public int ProductId { get; set; }
         [Column("product_code")]
         public string ProductCode { get; set; }
         [Column("product_name")]

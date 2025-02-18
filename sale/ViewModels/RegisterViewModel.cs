@@ -27,7 +27,6 @@ namespace sale.ViewModels
         private ObservableCollection<Sale> _sales;
         private string _selectedProductCategoryCode;
         private int _selectedProductId;
-        private int _customerId;
         private string _customerCode;
         private string _customerName;
         private string _productSearchText;
@@ -123,11 +122,6 @@ namespace sale.ViewModels
             set { SetProperty(ref _selectedProductId, value); }
         }
 
-        public int CustomerId
-        {
-            get { return _customerId; }
-            set { SetProperty(ref _customerId, value); }
-        }
         public string CustomerCode
         {
             get { return _customerCode; }
@@ -252,9 +246,9 @@ namespace sale.ViewModels
             using (var context = new AppDbContext())
             {
                 var product = context.Products.FirstOrDefault(p => p.Id == _selectedProductId);
-                var customer = Customers.FirstOrDefault(c => c.Id == this.CustomerId);
+                var customer = Customers.FirstOrDefault(c => c.Code == this.CustomerCode);
 
-                var existingSale = Sales.FirstOrDefault(s => s.ProductId == product.Id);
+                var existingSale = Sales.FirstOrDefault(s => s.ProductCode == product.Code);
 
                 if (existingSale != null)
                 {
@@ -270,12 +264,10 @@ namespace sale.ViewModels
                     {
                         State = 0,
                         SaleNo = this.SaleNo,
-                        CustomerId = this.CustomerId,
                         CustomerCode = customer?.Code ?? "",
                         CustomerName = customer?.Name ?? "",
                         CustomerZipCode = customer?.ZipCode ?? "",
                         CustomerAddress = customer?.Address ?? "",
-                        ProductId = product.Id,
                         ProductCode = product.Code,
                         ProductName = product.Name,
                         Quantity = 1,
@@ -444,10 +436,10 @@ namespace sale.ViewModels
             {
                 // 新期
 
-                this.CustomerId = navigationContext.Parameters.GetValue<int>(nameof(CustomerId));
+                this.CustomerCode = navigationContext.Parameters.GetValue<string>(nameof(CustomerCode));
 
                 // CustomersコレクションからCustomerIdに一致するCustomerを取得
-                var customer = Customers.FirstOrDefault(c => c.Id == this.CustomerId);
+                var customer = Customers.FirstOrDefault(c => c.Code == this.CustomerCode);
                 if (customer != null)
                 {
                     this.CustomerCode = customer.Code;
@@ -466,7 +458,6 @@ namespace sale.ViewModels
                     var sale = sales.First();
                     this.SaleNo = sale.SaleNo;
                     this.SaleDate = sale.SaleDate;
-                    this.CustomerId = sale.CustomerId;
                     this.CustomerCode = sale.CustomerCode;
                     this.CustomerName = sale.CustomerName;
                 }
