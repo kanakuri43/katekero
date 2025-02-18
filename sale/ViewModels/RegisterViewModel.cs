@@ -252,6 +252,7 @@ namespace sale.ViewModels
             using (var context = new AppDbContext())
             {
                 var product = context.Products.FirstOrDefault(p => p.Id == _selectedProductId);
+                var customer = Customers.FirstOrDefault(c => c.Id == this.CustomerId);
 
                 var existingSale = Sales.FirstOrDefault(s => s.ProductId == product.Id);
 
@@ -270,7 +271,10 @@ namespace sale.ViewModels
                         State = 0,
                         SaleNo = this.SaleNo,
                         CustomerId = this.CustomerId,
-                        CustomerName = this.CustomerName,
+                        CustomerCode = customer?.Code ?? "",
+                        CustomerName = customer?.Name ?? "",
+                        CustomerZipCode = customer?.ZipCode ?? "",
+                        CustomerAddress = customer?.Address ?? "",
                         ProductId = product.Id,
                         ProductCode = product.Code,
                         ProductName = product.Name,
@@ -302,7 +306,6 @@ namespace sale.ViewModels
                         sale.SaleDate = this.SaleDate;
                         sale.SaleNo = newSaleNo; 
                         sale.LineNo = lineNo;
-                        sale.CustomerCode = this.CustomerCode;
                         sale.CreatedAt = dt;
                         sale.UpdatedAt = dt;
                         context.Sales.Add(sale);

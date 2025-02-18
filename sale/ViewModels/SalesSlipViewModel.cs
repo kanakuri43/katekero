@@ -17,6 +17,8 @@ namespace sale.ViewModels
         private string _middleTitle;
         private string _lowerTitle;
         private string _customerName;
+        private string _customerAddress;
+        private string _customerZipCode;
         private int _subTotal;
         private int _taxPrice;
         private int _totalAmount;
@@ -56,6 +58,16 @@ namespace sale.ViewModels
             get { return _customerName; }
             set { SetProperty(ref _customerName, value); }
         }
+        public string CustomerAddress
+        {
+            get { return _customerAddress; }
+            set { SetProperty(ref _customerAddress, value); }
+        }
+        public string CustomerZipCode
+        {
+            get { return _customerZipCode; }
+            set { SetProperty(ref _customerZipCode, value); }
+        }
         public int Subtotal
         {
             get { return _subTotal; }
@@ -81,6 +93,8 @@ namespace sale.ViewModels
                 SaleNo = Sales[0].SaleNo;
                 SaleDate = Sales[0].SaleDate;
                 CustomerName = Sales[0].CustomerName;
+                CustomerAddress = Sales[0].CustomerAddress;
+                CustomerZipCode = Sales[0].CustomerZipCode;
 
                 Subtotal = Sales.Sum(s => s.Amount);
                 TaxPrice = (int)((int)Subtotal * 0.1);

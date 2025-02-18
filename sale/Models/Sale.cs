@@ -28,6 +28,10 @@ namespace sale.Models
         public string CustomerCode { get; set; }
         [Column("customer_name")]
         public string CustomerName { get; set; }
+        [Column("customer_address")]
+        public string CustomerAddress { get; set; }
+        [Column("customer_zip_code")]
+        public string CustomerZipCode { get; set; }
 
         [Column("product_id")]
         public int ProductId { get; set; }

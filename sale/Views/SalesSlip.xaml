@@ -52,8 +52,8 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="〒998-0102"/>
-                        <TextBlock Grid.Row="1" Text="山形県酒田市京田２丁目６９−２"/>
+                        <TextBlock Grid.Row="0" Text="{Binding CustomerZipCode, StringFormat='〒 \{0\}'}"/>
+                        <TextBlock Grid.Row="1" Text="{Binding CustomerAddress}"/>
                         <TextBlock Grid.Row="2" Text="{Binding CustomerName, StringFormat='\{0\} 御中'}"/>
 
                     </Grid>
@@ -215,8 +215,8 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="〒998-0102"/>
-                        <TextBlock Grid.Row="1" Text="山形県酒田市京田２丁目６９−２"/>
+                        <TextBlock Grid.Row="0" Text="{Binding CustomerZipCode, StringFormat='〒 \{0\}'}"/>
+                        <TextBlock Grid.Row="1" Text="{Binding CustomerAddress}"/>
                         <TextBlock Grid.Row="2" Text="{Binding CustomerName, StringFormat='\{0\} 御中'}"/>
 
                     </Grid>
@@ -379,8 +379,8 @@
                             <RowDefinition/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="〒998-0102"/>
-                        <TextBlock Grid.Row="1" Text="山形県酒田市京田２丁目６９−２"/>
+                        <TextBlock Grid.Row="0" Text="{Binding CustomerZipCode, StringFormat='〒 \{0\}'}"/>
+                        <TextBlock Grid.Row="1" Text="{Binding CustomerAddress}"/>
                         <TextBlock Grid.Row="2" Text="{Binding CustomerName, StringFormat='\{0\} 御中'}"/>
 
                     </Grid>

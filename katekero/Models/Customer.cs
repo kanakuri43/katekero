@@ -17,8 +17,12 @@ namespace katekero.Models
         public string Code { get; set; }
         [Column("name")]
         public string Name { get; set; }
+        [Column("zip_code")]
+        public string ZipCode { get; set; }
         [Column("address")]
         public string Address { get; set; }
+        [Column("invoice_closing_day")]
+        public int InvoiceClosingDay { get; set; }
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
         [Column("updated_at")]

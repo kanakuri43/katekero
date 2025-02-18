@@ -172,7 +172,9 @@ namespace sale.ViewModels
                     State = 0,
                     Code = (string)record["code"]?["value"],
                     Name = (string)record["name"]?["value"],
-                    Address = (string)record["address"]?["value"]
+                    ZipCode = (string)record["zip_code"]?["value"],
+                    Address = (string)record["address"]?["value"],
+                    InvoiceClosingDay = int.Parse((string)record["invoice_closing_day"]?["value"])
                 }).ToList();
 
                 FetchedCustomers = new ObservableCollection<Customer>(records);
@@ -268,7 +270,9 @@ namespace sale.ViewModels
                             State = fetchedCustomer.State,
                             Code = fetchedCustomer.Code,
                             Name = fetchedCustomer.Name,
+                            ZipCode = fetchedCustomer.ZipCode,
                             Address = fetchedCustomer.Address,
+                            InvoiceClosingDay = fetchedCustomer.InvoiceClosingDay,
                             CreatedAt = dt,
                             UpdatedAt = dt
                         };
@@ -277,9 +281,11 @@ namespace sale.ViewModels
                     else
                     {
                         // 既存の顧客を更新
-                        existingCustomer.Name = fetchedCustomer.Name;
-                        existingCustomer.Address = fetchedCustomer.Address;
                         existingCustomer.State = fetchedCustomer.State;
+                        existingCustomer.Name = fetchedCustomer.Name;
+                        existingCustomer.ZipCode = fetchedCustomer.ZipCode;
+                        existingCustomer.Address = fetchedCustomer.Address;
+                        existingCustomer.InvoiceClosingDay = fetchedCustomer.InvoiceClosingDay;
                         existingCustomer.UpdatedAt = dt;
                     }
 
