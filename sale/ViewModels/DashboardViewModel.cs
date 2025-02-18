@@ -15,6 +15,8 @@ using Newtonsoft.Json;
 using System.Timers;
 using katekero.Models;
 using System.Windows.Documents;
+using Microsoft.Toolkit.Uwp.Notifications;
+using System.Windows.Controls.Primitives;
 
 namespace sale.ViewModels
 {
@@ -100,7 +102,7 @@ namespace sale.ViewModels
             RegisterCommand = new DelegateCommand(Register);
             ForwardCommand = new DelegateCommand(ForwardDate);
             BackwardCommand = new DelegateCommand(BackwardDate);
-            ManualReloadCommand = new DelegateCommand(Reload);
+            ManualReloadCommand = new DelegateCommand(ReloadOrders);
 
             using (var context = new AppDbContext())
             {
@@ -110,10 +112,10 @@ namespace sale.ViewModels
 
             IsProgressRingActive = true;
 
-            Reload();
-            // Timerの設定 (1分ごと)
-            _timer = new Timer(60000);
-            _timer.Elapsed += (sender, e) => Reload();
+            ReloadOrders();
+            // Timerの設定 (15秒ごと)
+            _timer = new Timer(15000);
+            _timer.Elapsed += (sender, e) => ReloadOrders();
             _timer.Start();
 
             SelectedDate = DateTime.Now;
@@ -235,7 +237,7 @@ namespace sale.ViewModels
             ShowSalesList();
         }
 
-        private void Reload()
+        private void ReloadOrders()
         {
             _ = FetchKintoneOrders(new string[] { });
             LastFetchedAt = DateTime.Now;
@@ -355,26 +357,23 @@ namespace sale.ViewModels
         {
             try
             {
+                // 取得前の注文リストをコピー
+                var previousOrders = FetchedOrders?.ToList() ?? new List<Order>();
 
                 HttpClient client = new HttpClient();
 
-                // kintoneのAPIトークン
                 string apiToken = "clYsh32YLyQryGcHH8t4F8hkyIhOuEL67YBuyuvU";
 
-                // ヘッダーにAPIトークンを設定
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Add("X-Cybozu-API-Token", apiToken);
 
-                // レコード取得のURL
                 string url = $"https://vk5k755s9nir.cybozu.com/k/v1/records.json?app=203";
 
-                // レコードを取得
                 HttpResponseMessage response = await client.GetAsync(url);
 
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                // JSONデータをOrderオブジェクトに変換
                 var jsonObject = JObject.Parse(responseBody);
                 var records = jsonObject["records"].Select(record => new Order
                 {
@@ -391,18 +390,26 @@ namespace sale.ViewModels
                 }).Where(order => order.Sold != 1).ToList();
 
                 FetchedOrders = new ObservableCollection<Order>(records.OrderBy(o => o.OrderDate));
+
+                // 新しい注文を検出
+                var newOrders = FetchedOrders.Where(o => !previousOrders.Any(po => po.OrderNo == o.OrderNo)).ToList();
+
+                if ((previousOrders.Count != 0) && (newOrders.Any()))
+                {
+                    var newOrderDetails = string.Join(", ", newOrders.Select(o => $"OrderNo: {o.OrderNo}, Customer: {o.CustomerName}"));
+
+                    new ToastContentBuilder()
+                        .AddText("カテケロ")
+                        .AddText($"{newOrders.Count} 件の新着の受注があります")
+                        .AddAttributionText(newOrderDetails)
+                        .Show();
+                }
             }
             catch (Exception ex)
             {
-
+                // エラーハンドリング
             }
-            finally
-            {
-
-            }
-
         }
-
         private void SaleDoubleClick()
         {
             var selectedSales = Sales.Where(s => s.SaleNo == SelectedSaleNo).ToList();
