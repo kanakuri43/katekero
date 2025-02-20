@@ -406,7 +406,7 @@ namespace sale.ViewModels
 
                     new ToastContentBuilder()
                         .AddText("カテケロ")
-                        .AddText($"{newOrders.Count} 件の新着の受注があります")
+                        .AddText($"{newOrders.Count} 件の新着受注があります")
                         .AddAttributionText(newOrderDetails)
                         .Show();
                 }

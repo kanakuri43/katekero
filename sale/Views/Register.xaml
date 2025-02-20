@@ -23,6 +23,7 @@
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="80"/>
+                <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
@@ -94,12 +95,13 @@
                 </Rectangle>
             </Button>
 
-            <StackPanel Grid.Column="5" 
+
+            <StackPanel Grid.Column="6" 
                         Orientation="Vertical">
                 <DatePicker IsEnabled ="{Binding CanHeaderEdit}"
                             SelectedDate="{Binding SaleDate}"/>
             </StackPanel>
-            <TextBlock Grid.Column="6"
+            <TextBlock Grid.Column="7"
                       TextAlignment="Right"
                        Text="{Binding PrimaryTaxRate, StringFormat='消費税率 \{0\} %'}"/>
 
