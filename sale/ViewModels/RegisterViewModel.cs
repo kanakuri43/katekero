@@ -329,7 +329,7 @@ namespace sale.ViewModels
                     PrintSalesSlip();
                 }
             }
-            UpdateKintoneOrder.Update();
+            //UpdateKintoneOrder.Update();
 
         }
         private void DeleteSales()

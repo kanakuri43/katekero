@@ -19,7 +19,7 @@ namespace sale.Models
 
             return new
             {
-                ConnectionString = doc.Root.Element("Database").Element("ConnectionString").Value.Trim(),
+                //ConnectionString = doc.Root.Element("Database").Element("ConnectionString").Value.Trim(),
                 BaseUrl = doc.Root.Element("Kintone").Element("BaseUrl").Value.Trim(),
                 AppId = doc.Root.Element("Kintone").Element("AppId").Value.Trim(),
                 ApiToken = doc.Root.Element("Kintone").Element("ApiToken").Value.Trim(),
@@ -44,20 +44,19 @@ namespace sale.Models
             var fetchedData = new List<(string 年月, string 担当者, double 売上実績, double 粗利実績)>
             {
                 ("202410", "s-motoki@netoffice.obisan.co.jp",  10, 10),
-                ("202410", "m-sugawara@netoffice.obisan.co.jp", 20, 20)
+                //("202410", "m-sugawara@netoffice.obisan.co.jp", 20, 20)
             };
 
             // 
             foreach (var d in fetchedData)
             {
-                string summaryDate = d.年月.Substring(0, 4) + "-" + d.年月.Substring(4, 2) + "-01";
-                string query = $"年月 = \"{d.年月}\" and 担当者 in (\"{d.担当者}\")";
+                string query = $"order_no = \"40\" ";
 
                 var getParams = new Dictionary<string, string>
-            {
-                { "app", _config.AppId },
-                { "query", query }
-            };
+                {
+                    { "app", _config.AppId },
+                    { "query", query }
+                };
 
                 using (HttpClient client = new HttpClient())
                 {
@@ -80,7 +79,8 @@ namespace sale.Models
                         foreach (var record in records)
                         {
                             var recordDict = ((Newtonsoft.Json.Linq.JObject)record).ToObject<Dictionary<string, object>>();
-                            string recordId = ((Newtonsoft.Json.Linq.JObject)recordDict["$id"])["value"].ToString();
+                            //string recordId = ((Newtonsoft.Json.Linq.JObject)recordDict["$id"])["value"].ToString();
+                            string recordId = "40";
 
                             var postParams = new Dictionary<string, object>
                             {
@@ -88,9 +88,7 @@ namespace sale.Models
                                 { "id", recordId },
                                 { "record", new Dictionary<string, object>
                                     {
-                                        { "売上実績", new Dictionary<string, object> { { "value", d.売上実績 } } },
-                                        { "粗利実績", new Dictionary<string, object> { { "value", d.粗利実績 } } },
-                                        { "日付", new Dictionary<string, object> { { "value", summaryDate } } }
+                                        { "sold", new Dictionary<string, object> { { "value", 1 } } }   // 売上済みを1に更新
                                     }
                                 }
                             };

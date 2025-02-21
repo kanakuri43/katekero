@@ -7,10 +7,10 @@
   </Database>
 	
 	<Kintone>
-		<BaseUrl>https://pnymmttzkdv0.cybozu.com/k/v1/</BaseUrl>
-		<AppId>647</AppId>
-		<ApiToken>4db2V3y5800aI8CtmckU4Ak7KwijgsOs841K6T0b</ApiToken>
-		<BasicPassword>b2Jpc2FuOnNaTjgyTGFZbWY=</BasicPassword>
+		<BaseUrl>https://vk5k755s9nir.cybozu.com/k/v1/</BaseUrl>
+		<AppId>203</AppId>
+		<ApiToken>DACJDxy3G7iLkvL0bbEIgUUnS4LdNJo8HcSNiW5Q</ApiToken>
+		<BasicPassword>YS1uaXNoaXp1a2ExMzU1OjEzNTVuaXNoaS5Rd2Vy</BasicPassword>
 	</Kintone>
 	
 </Configuration>
