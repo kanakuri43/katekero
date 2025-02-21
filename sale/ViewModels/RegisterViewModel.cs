@@ -291,7 +291,7 @@ namespace sale.ViewModels
                     int newSaleNo = maxSaleNo + 1;
 
                     var lineNo = 0;
-                    foreach (var sale in _sales)
+                    foreach (var sale in Sales)
                     {
                         lineNo++;
 
@@ -308,7 +308,14 @@ namespace sale.ViewModels
 
                 }
 
+                // SQLServerの売上データを更新
                 context.SaveChanges();
+
+                // kintone の受注データを更新
+                if (Sales.Any())
+                {
+                    UpdateKintoneOrder.Update(Sales.First().OrderNo);
+                }
 
                 // カスタムダイアログを表示
                 var metroWindow = (Application.Current.MainWindow as MetroWindow);
@@ -329,7 +336,6 @@ namespace sale.ViewModels
                     PrintSalesSlip();
                 }
             }
-            //UpdateKintoneOrder.Update();
 
         }
         private void DeleteSales()

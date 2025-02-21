@@ -38,7 +38,7 @@ namespace sale.Models
             return string.Join("&", encodedParams);
         }
 
-        public static async void Update()
+        public static async void Update(int OrderNo)
         {
             // サンプルデータ
             var fetchedData = new List<(string 年月, string 担当者, double 売上実績, double 粗利実績)>
@@ -48,9 +48,9 @@ namespace sale.Models
             };
 
             // 
-            foreach (var d in fetchedData)
-            {
-                string query = $"order_no = \"40\" ";
+            //foreach (var d in fetchedData)
+            //{
+                string query = $"order_no = \"{OrderNo}\" ";
 
                 var getParams = new Dictionary<string, string>
                 {
@@ -80,7 +80,7 @@ namespace sale.Models
                         {
                             var recordDict = ((Newtonsoft.Json.Linq.JObject)record).ToObject<Dictionary<string, object>>();
                             //string recordId = ((Newtonsoft.Json.Linq.JObject)recordDict["$id"])["value"].ToString();
-                            string recordId = "40";
+                            string recordId = OrderNo.ToString();
 
                             var postParams = new Dictionary<string, object>
                             {
@@ -103,7 +103,7 @@ namespace sale.Models
 
                         }
                     }
-                }
+                //}
             }
         }
     }

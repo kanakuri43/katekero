@@ -21,6 +21,8 @@ namespace sale.Models
         public int SaleNo { get; set; }
         [Column("line_no")]
         public int LineNo { get; set; }
+        [Column("order_no")]
+        public int OrderNo { get; set; }
 
         [Column("customer_Code")]
         public string CustomerCode { get; set; }

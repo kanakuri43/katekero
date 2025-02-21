@@ -113,8 +113,8 @@ namespace sale.ViewModels
             IsProgressRingActive = true;
 
             ReloadOrders();
-            // Timerの設定 (15秒ごと)
-            _timer = new Timer(15000);
+            // Timerの設定 (10秒ごと)
+            _timer = new Timer(10000);
             _timer.Elapsed += (sender, e) => ReloadOrders();
             _timer.Start();
 
@@ -436,6 +436,7 @@ namespace sale.ViewModels
                 var sale = new Sale
                 {
                     SaleNo = 0, 
+                    OrderNo = selectedOrder.OrderNo,
                     SaleDate = DateTime.Now,
                     CustomerCode = selectedOrder.CustomerCode, 
                     CustomerName = selectedOrder.CustomerName,
