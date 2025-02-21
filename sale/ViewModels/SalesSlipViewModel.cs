@@ -12,6 +12,7 @@ namespace sale.ViewModels
     {
         private ObservableCollection<Sale> _sales;
         private int _saleNo;
+        private int _orderNo;
         private DateTime _saleDate;
         private string _upperTitle;
         private string _middleTitle;
@@ -42,6 +43,11 @@ namespace sale.ViewModels
         {
             get { return _lowerTitle; }
             set { SetProperty(ref _lowerTitle, value); }
+        }
+        public int OrderNo
+        {
+            get { return _orderNo; }
+            set { SetProperty(ref _orderNo, value); }
         }
         public int SaleNo
         {
@@ -90,6 +96,7 @@ namespace sale.ViewModels
             Sales = sales ?? new ObservableCollection<Sale>();
             if (Sales != null && Sales.Count > 0)
             {
+                OrderNo = Sales[0].OrderNo;
                 SaleNo = Sales[0].SaleNo;
                 SaleDate = Sales[0].SaleDate;
                 CustomerName = Sales[0].CustomerName;

@@ -142,31 +142,34 @@
                 </ListView>
 
 
-                <Grid Grid.Row="6"
-                  Width="200"
-                  HorizontalAlignment="Right">
+                <Grid Grid.Row="6">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
                         <ColumnDefinition Width="100"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.RowSpan="3"
-                        Background="LightGray"/>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="小計"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" 
+                    <TextBlock Grid.Row="0" 
+                               Grid.Column="0" 
+                               Text="{Binding OrderNo, StringFormat='O#\{0\}'}"/>
+                    <Border Grid.Column="1" 
+                            Grid.RowSpan="3"
+                            Background="LightGray"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="小計"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" 
                            Text="{Binding Subtotal, StringFormat=N0}"
                            HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="消費税"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" 
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="消費税"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" 
                            Text="{Binding TaxPrice, StringFormat=N0}"
                            HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="合計"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" 
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="合計"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" 
                            Text="{Binding TotalAmount, StringFormat=N0}"
                            HorizontalAlignment="Right"/>
 
@@ -305,33 +308,36 @@
                 </ListView>
 
 
-                <Grid Grid.Row="6"
-                      Width="200"
-                      HorizontalAlignment="Right">
+                <Grid Grid.Row="6">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
                         <ColumnDefinition Width="100"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.RowSpan="3"
-                    Background="LightGray"/>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="小計"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" 
-                       Text="{Binding Subtotal, StringFormat=N0}"
-                       HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="消費税"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" 
-                       Text="{Binding TaxPrice, StringFormat=N0}"
-                       HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="合計"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" 
-                       Text="{Binding TotalAmount, StringFormat=N0}"
-                       HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="0" 
+                               Grid.Column="0"
+                               Text="{Binding OrderNo, StringFormat='O#\{0\}'}"/>
+                    <Border Grid.Column="1" 
+                            Grid.RowSpan="3"
+                            Background="LightGray"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="小計"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" 
+                           Text="{Binding Subtotal, StringFormat=N0}"
+                           HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="消費税"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" 
+                           Text="{Binding TaxPrice, StringFormat=N0}"
+                           HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="合計"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" 
+                           Text="{Binding TotalAmount, StringFormat=N0}"
+                           HorizontalAlignment="Right"/>
 
                 </Grid>
 
@@ -469,33 +475,36 @@
                 </ListView>
 
 
-                <Grid Grid.Row="6"
-              Width="200"
-              HorizontalAlignment="Right">
+                <Grid Grid.Row="6">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
                         <ColumnDefinition Width="100"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="100"/>
                     </Grid.ColumnDefinitions>
 
-                    <Border Grid.RowSpan="3"
-                    Background="LightGray"/>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="小計"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" 
-                       Text="{Binding Subtotal, StringFormat=N0}"
-                       HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="消費税"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" 
-                       Text="{Binding TaxPrice, StringFormat=N0}"
-                       HorizontalAlignment="Right"/>
-                    <TextBlock Grid.Row="2" Grid.Column="0" Text="合計"/>
-                    <TextBlock Grid.Row="2" Grid.Column="1" 
-                       Text="{Binding TotalAmount, StringFormat=N0}"
-                       HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="0" 
+                               Grid.Column="0" 
+                               Text="{Binding OrderNo, StringFormat='O#\{0\}'}"/>
+                    <Border Grid.Column="1" 
+                            Grid.RowSpan="3"
+                            Background="LightGray"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="小計"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" 
+                           Text="{Binding Subtotal, StringFormat=N0}"
+                           HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="消費税"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" 
+                           Text="{Binding TaxPrice, StringFormat=N0}"
+                           HorizontalAlignment="Right"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="合計"/>
+                    <TextBlock Grid.Row="2" Grid.Column="2" 
+                           Text="{Binding TotalAmount, StringFormat=N0}"
+                           HorizontalAlignment="Right"/>
 
                 </Grid>
 
