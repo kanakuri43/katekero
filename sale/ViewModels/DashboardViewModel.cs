@@ -17,6 +17,9 @@ using katekero.Models;
 using System.Windows.Documents;
 using Microsoft.Toolkit.Uwp.Notifications;
 using System.Windows.Controls.Primitives;
+using ControlzEx.Standard;
+using System.Net.Mail;
+using System.Net;
 
 namespace sale.ViewModels
 {
@@ -402,13 +405,18 @@ namespace sale.ViewModels
 
                 if ((previousOrders.Count != 0) && (newOrders.Any()))
                 {
-                    var newOrderDetails = string.Join(", ", newOrders.Select(o => $"OrderNo: {o.OrderNo}, Customer: {o.CustomerName}"));
 
+                    // Toaster
+                    var newOrderDetails = string.Join(", ", newOrders.Select(o => $"OrderNo: {o.OrderNo}, Customer: {o.CustomerName}"));
                     new ToastContentBuilder()
                         .AddText("カテケロ")
                         .AddText($"{newOrders.Count} 件の新着受注があります")
                         .AddAttributionText(newOrderDetails)
                         .Show();
+
+                    // Mail
+                    SendMail();
+
                 }
             }
             catch (Exception ex)
@@ -416,6 +424,46 @@ namespace sale.ViewModels
                 // エラーハンドリング
             }
         }
+
+        private void SendMail()
+        {
+            try
+            {
+                // 送信先、CC、BCC の設定を取得
+                var toAddresses = @"t-okita@netoffice.obisan.co.jp";
+
+                // メールメッセージの作成
+                var mail = new MailMessage
+                {
+                    From = new MailAddress(@"t-okita@netoffice.obisan.co.jp"),
+                    Subject = "katekero mail notif",
+                    Body = "新着受注があります。"
+                };
+
+
+                mail.To.Add(toAddresses);
+
+                // SMTP クライアントの設定
+                using (var smtpClient = new SmtpClient("mss290.kagoya.net"))
+                {
+                    smtpClient.Port = int.Parse("587");
+                    smtpClient.Credentials = new System.Net.NetworkCredential("t-okita", "cthUVpPB1x");
+
+                    Console.WriteLine($"{DateTime.Now:HH:mm:ss} Sending email...");
+                    smtpClient.Send(mail);
+                    Console.WriteLine($"{DateTime.Now:HH:mm:ss} Success.");
+
+                }
+
+                return;
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
+
+        }
+
         private void SaleDoubleClick()
         {
             var selectedSales = Sales.Where(s => s.SaleNo == SelectedSaleNo).ToList();

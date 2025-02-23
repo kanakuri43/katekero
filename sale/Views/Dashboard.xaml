@@ -28,16 +28,18 @@
                         <StackPanel Grid.Row="0" Grid.Column="0"
                                     Orientation="Horizontal"
                                     Margin="0,20,0,0">
+                            <TextBox Width="200"
+                                        Margin="20,0,0,0"
+                                        Controls:TextBoxHelper.Watermark="得意先検索"/>
                             <Button Command="{Binding ManualReloadCommand}"
+                                    Visibility="Hidden"
                                     Width="30">
                                 <iconPacks:PackIconMaterial Kind="Reload"/>
                             </Button>
                             <TextBlock Text="{Binding LastFetchedAt, StringFormat='最終取得： yyyy/MM/dd HH:mm:ss'}" 
                                        Width="200"
+                                    Visibility="Hidden"
                                        Margin="20,0,0,0"/>
-                            <TextBox Width="200"
-                                        Margin="20,0,0,0"
-                                        Controls:TextBoxHelper.Watermark="得意先検索"/>
 
                         </StackPanel>
                         <ListView Grid.Row="2" 
