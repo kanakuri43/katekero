@@ -11,6 +11,7 @@ namespace katekero.Models
     public class Customer
     {
         public int Id { get; set; }
+
         [Column("state")]
         public int State { get; set; }
         [Column("code")]
@@ -23,6 +24,12 @@ namespace katekero.Models
         public string Address { get; set; }
         [Column("invoice_closing_day")]
         public int InvoiceClosingDay { get; set; }
+        [Column("primary_staff_code")]
+        public string PrimaryStaffCode { get; set; }
+        [Column("secondary_staff_code")]
+        public string SecondaryStaffCode { get; set; }
+
+
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
         [Column("updated_at")]

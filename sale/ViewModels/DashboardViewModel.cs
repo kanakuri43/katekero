@@ -177,7 +177,9 @@ namespace sale.ViewModels
                     Name = (string)record["name"]?["value"],
                     ZipCode = (string)record["zip_code"]?["value"],
                     Address = (string)record["address"]?["value"],
-                    InvoiceClosingDay = int.Parse((string)record["invoice_closing_day"]?["value"])
+                    InvoiceClosingDay = int.Parse((string)record["invoice_closing_day"]?["value"]),
+                    PrimaryStaffCode = (string)record["primary_staff_code"]?["value"],
+                    SecondaryStaffCode = (string)record["secondary_staff_code"]?["value"],
                 }).ToList();
 
                 FetchedCustomers = new ObservableCollection<Customer>(records);
@@ -276,6 +278,8 @@ namespace sale.ViewModels
                             ZipCode = fetchedCustomer.ZipCode,
                             Address = fetchedCustomer.Address,
                             InvoiceClosingDay = fetchedCustomer.InvoiceClosingDay,
+                            PrimaryStaffCode = fetchedCustomer.PrimaryStaffCode,
+                            SecondaryStaffCode = fetchedCustomer.SecondaryStaffCode,
                             CreatedAt = dt,
                             UpdatedAt = dt
                         };
@@ -289,6 +293,8 @@ namespace sale.ViewModels
                         existingCustomer.ZipCode = fetchedCustomer.ZipCode;
                         existingCustomer.Address = fetchedCustomer.Address;
                         existingCustomer.InvoiceClosingDay = fetchedCustomer.InvoiceClosingDay;
+                        existingCustomer.PrimaryStaffCode = fetchedCustomer.PrimaryStaffCode;
+                        existingCustomer.SecondaryStaffCode = fetchedCustomer.SecondaryStaffCode;
                         existingCustomer.UpdatedAt = dt;
                     }
 

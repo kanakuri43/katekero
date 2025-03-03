@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<qqcsSettings>
+  <ConnectString>
+		Data Source=172.16.3.171;Initial Catalog=katekero_db;User ID=sa;Password=Sapassword1
+	</ConnectString>
+  <MaxRecordCount>1000</MaxRecordCount>
+  <Query id="0">
+    <Name>売上一覧</Name>
+    <SQL>
+		SELECT 
+		  * 
+		FROM
+		 sales
+		 ;
+		</SQL>
+    <Param id="0">
+      <Name>年月</Name>
+      <Value>20250201</Value>
+    </Param>
+  </Query>
+  <Query id="1">
+    <Name>入金一覧</Name>
+    <SQL>
+		SELECT 
+		  * 
+		FROM
+		 receipts
+		 ;
+		</SQL>
+    <Param id="0">
+      <Name>年月</Name>
+      <Value>202501</Value>
+    </Param>
+  </Query>
+  <Query id="2">
+    <Name>売掛残高一覧</Name>
+    <SQL>
+		SELECT 
+		  customer_code
+		  , MIN(customer_name) AS customer_name
+		  , SUM(amount) AS amount
+		FROM
+		 sales
+		 GROUP BY customer_code
+		 ;
+		</SQL>
+    <Param id="0">
+      <Name>集計日</Name>
+      <Value>20230131</Value>
+    </Param>
+  </Query>
+  <Query id="3">
+    <Name>得意先別売上順位</Name>
+    <SQL>
+		SELECT
+			RANK() OVER (ORDER BY SUM(price) DESC) AS Rank
+			, customer_code
+			, MIN(customer_name)
+			, SUM(price) 
+		FROM
+			sales 
+		WHERE
+			CONVERT(DATE, sale_date) BETWEEN '2025-01-01' AND '2025-12-31' 
+		GROUP BY
+			customer_code 
+		ORDER BY
+			SUM(price) DESC
+		 ;
+		</SQL>
+    <Param id="0">
+      <Name>集計日</Name>
+      <Value>20230131</Value>
+    </Param>
+  </Query>
+  <Query id="4">
+    <Name>担当者別売上順位</Name>
+    <SQL>
+		SELECT
+			RANK() OVER (ORDER BY SUM(price) DESC) AS Rank
+			, customers.primary_staff_code
+			, MIN(staffs.name)
+			, SUM(price) 
+		FROM
+			sales 
+			LEFT JOIN customers 
+				ON sales.customer_code = customers.code 
+			LEFT JOIN staffs 
+				ON customers.primary_staff_code = staffs.code 
+		WHERE
+			CONVERT(DATE, sale_date) BETWEEN '2025-01-01' AND '2025-12-31' 
+		GROUP BY
+			customers.primary_staff_code 
+		ORDER BY
+			SUM(price) DESC
+		 ;
+		</SQL>
+    <Param id="0">
+      <Name>集計日</Name>
+      <Value>20230131</Value>
+    </Param>
+  </Query>
+</qqcsSettings>
